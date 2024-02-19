@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/AlbertHuynhPortfolio/static/css/main.eaf466d7.css",
+    "main.js": "/AlbertHuynhPortfolio/static/js/main.97ddf807.js",
+    "index.html": "/AlbertHuynhPortfolio/index.html",
+    "main.eaf466d7.css.map": "/AlbertHuynhPortfolio/static/css/main.eaf466d7.css.map",
+    "main.97ddf807.js.map": "/AlbertHuynhPortfolio/static/js/main.97ddf807.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.eaf466d7.css",
+    "static/js/main.97ddf807.js"
+  ]
+}
