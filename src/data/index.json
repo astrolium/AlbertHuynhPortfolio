@@ -1,0 +1,78 @@
+{
+    "skills": [
+        {
+            "id": "1",
+            "src": "./img/product-chain-1.png",
+            "title": "Data Analysis",
+            "description": "With technical experience in Python, R and Excel. I am a data-driven with the ability to navigate large datasets, draw valuable insight and inform business decision."
+        },
+        {
+            "id": "2",
+            "src": "./img/tag-1.png",
+            "title": "Product Management",
+            "description": "My unique blend of technical skills, data-driven problem-solving prowess makes me an invaluable asset to any organization"
+        },
+        {
+            "id": "3",
+            "src": "./img/feather-pen-2.png",
+            "title": "Go-To-Market",
+            "description": "From startups to tech unicorns, I've worked go-to-market in sales and demand generation."
+        },
+        {
+            "id": "4",
+            "src": "./img/feather-pen-1.png",
+            "title": "Web Development",
+            "description": "Creating this website using React, and scripting with Python and Javascript to make my daily life easier."
+        }
+    ],
+    "portfolio": [
+        {
+            "id": "1",
+            "src": "./img/placeholder-image.png",
+            "title": "Ahuse",
+            "description": "Lorem ipsum Dolor sit amet consectetur adipicing elitLorem ipsum dolor, sit",
+            "link": "View In Github"
+        },
+        {
+            "id": "2",
+            "src": "./img/placeholder-image-1.png",
+            "title": "App Dashboard",
+            "description": "Lorem ipsum Dolor sit amet consectetur adipicing elitLorem ipsum dolor, sit",
+            "link": "View In Github"
+        },
+        {
+            "id": "3",
+            "src": "./img/placeholder-image-2.png",
+            "title": "Easy Rentn",
+            "description": "Lorem ipsum Dolor sit amet consectetur adipicing elitLorem ipsum dolor, sit",
+            "link": "View In Github"
+        }
+    ],
+    "testimonial": [
+        {
+            "id": "1",
+            "count": "5",
+            "src": "./img/avatar-image.png",
+            "description": "Lorem ipsum Dolor sit amet consectetur adipicing elitLorem ipsum dolor, sit",
+            "author_name": "Dianne Russel",
+            "author_designation": "Facebook"
+        },
+        {
+            "id": "2",
+            "count": "5",
+            "src": "./img/avatar-image-1.png",
+            "description": "Lorem ipsum Dolor sit amet consectetur adipicing elitLorem ipsum dolor, sit",
+            "author_name": "Alex Bramos",
+            "author_designation": "Clio"
+        },
+        {
+            "id": "3",
+            "count": "5",
+            "src": "./img/avatar-image-2.png",
+            "description": "Lorem ipsum Dolor sit amet consectetur adipicing elitLorem ipsum dolor, sit",
+            "author_name": "Rachna Ravi",
+            "author_designation": "HelloFresh"
+        }
+        
+    ]
+}
