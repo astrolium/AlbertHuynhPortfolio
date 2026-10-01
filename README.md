@@ -1,71 +1,56 @@
-`# Getting Started with Create React App
+# Albert Huynh — portfolio
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A single-page portfolio built with Create React App. No UI framework, no
+animation library: the motion is a small spring engine in `src/lib/`.
 
-## Available Scripts
+## Running it
 
-In the project directory, you can run:
+```bash
+npm install
+npm start      # http://localhost:3000
+npm run build  # production bundle in build/
+```
 
-### `npm start`
+## Structure
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+```
+public/img/            images the page ships (920KB total)
+design/originals/      the full-resolution hero_img.png and about-me.png the
+                       optimised versions were made from; not deployed
+src/lib/spring.js      spring solver, momentum projection, rubber-banding,
+                       velocity tracking
+src/lib/motion.js      reveal-on-scroll, spring page scroll, scroll spy
+src/lib/theme.js       light / dark / follow-the-system preference
+src/sections/          one file per section of the page
+src/data/index.json    all copy for the expertise and experience cards
+```
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Editing content
 
-### `npm test`
+Everything on the page that is a list lives in `src/data/index.json`:
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- `skills` — the four expertise cards. `src` points at a **solid black PNG
+  glyph**; it is used as a CSS mask, so the icon takes the accent colour and
+  adapts to dark mode automatically. Swap in any black-on-transparent icon.
+- `portfolio` — the work shelf. `role` and `period` are optional; leave them
+  as `""` and the line is omitted. Clio's is currently blank.
+- `testimonial` — kept for later; no section renders it yet.
 
-### `npm run build`
+Prose that isn't a list (hero, about, contact) lives directly in the matching
+file in `src/sections/`.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## How the motion works
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+Every animation is a spring described by a **damping ratio** (how much it
+overshoots) and a **response** (how quickly it gets there), rather than a
+duration and an easing curve. Springs are used because they are interruptible:
+re-targeting one keeps its current value *and* velocity, so a gesture can grab
+a moving element and reverse it without a jump.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+The work shelf is the fullest example — drag it and it tracks your pointer 1:1,
+resists past the ends, and on release projects where the flick was heading
+before snapping there with your release velocity carried into the spring.
 
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
-# AlbertHuynhWebsite
+`prefers-reduced-motion`, `prefers-reduced-transparency` and `prefers-contrast`
+are all honoured; with reduced motion the springs become instant state changes
+and reveals become cross-fades.

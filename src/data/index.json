@@ -1,78 +1,99 @@
 {
-    "skills": [
-        {
-            "id": "1",
-            "src": "./img/product-chain-1.png",
-            "title": "Data Analysis",
-            "description": "With technical experience in Python, R and Excel. I am a data-driven with the ability to navigate large datasets, draw valuable insight and inform business decision."
-        },
-        {
-            "id": "2",
-            "src": "./img/tag-1.png",
-            "title": "Product Management",
-            "description": "My unique blend of technical skills, data-driven problem-solving prowess makes me an invaluable asset to any organization"
-        },
-        {
-            "id": "3",
-            "src": "./img/feather-pen-2.png",
-            "title": "Go-To-Market",
-            "description": "From startups to tech unicorns, I've worked go-to-market in sales and demand generation."
-        },
-        {
-            "id": "4",
-            "src": "./img/feather-pen-1.png",
-            "title": "Web Development",
-            "description": "Creating this website using React, and scripting with Python and Javascript to make my daily life easier."
-        }
-    ],
-    "portfolio": [
-        {
-            "id": "1",
-            "src": "./img/placeholder-image.png",
-            "title": "Ahuse",
-            "description": "Lorem ipsum Dolor sit amet consectetur adipicing elitLorem ipsum dolor, sit",
-            "link": "View In Github"
-        },
-        {
-            "id": "2",
-            "src": "./img/placeholder-image-1.png",
-            "title": "App Dashboard",
-            "description": "Lorem ipsum Dolor sit amet consectetur adipicing elitLorem ipsum dolor, sit",
-            "link": "View In Github"
-        },
-        {
-            "id": "3",
-            "src": "./img/placeholder-image-2.png",
-            "title": "Easy Rentn",
-            "description": "Lorem ipsum Dolor sit amet consectetur adipicing elitLorem ipsum dolor, sit",
-            "link": "View In Github"
-        }
-    ],
-    "testimonial": [
-        {
-            "id": "1",
-            "count": "5",
-            "src": "./img/avatar-image.png",
-            "description": "Lorem ipsum Dolor sit amet consectetur adipicing elitLorem ipsum dolor, sit",
-            "author_name": "Dianne Russel",
-            "author_designation": "Facebook"
-        },
-        {
-            "id": "2",
-            "count": "5",
-            "src": "./img/avatar-image-1.png",
-            "description": "Lorem ipsum Dolor sit amet consectetur adipicing elitLorem ipsum dolor, sit",
-            "author_name": "Alex Bramos",
-            "author_designation": "Clio"
-        },
-        {
-            "id": "3",
-            "count": "5",
-            "src": "./img/avatar-image-2.png",
-            "description": "Lorem ipsum Dolor sit amet consectetur adipicing elitLorem ipsum dolor, sit",
-            "author_name": "Rachna Ravi",
-            "author_designation": "HelloFresh"
-        }
-        
-    ]
+  "portfolio": [
+    {
+      "id": "addepar",
+      "company": "Addepar",
+      "logo": "./img/logo-addepar.svg",
+      "ratio": 5.65,
+      "role": "Research & Product",
+      "period": "Present",
+      "headline": "Benchmarks for the world’s private funds.",
+      "blurb": "Expanding what Addepar’s Private Fund Benchmarks can answer, and digging for the interesting stories hiding in the world’s largest private-fund cashflow dataset.",
+      "tags": [
+        "Private markets",
+        "Benchmarks",
+        "Data research"
+      ],
+      "graphic": "addepar",
+      "stageLabel": "Private Fund Benchmarks"
+    },
+    {
+      "id": "clio",
+      "company": "Clio",
+      "logo": "./img/logo-clio.png",
+      "ratio": 3.06,
+      "role": "Growth Analyst",
+      "period": "2024",
+      "headline": "A whole product line, taken to market.",
+      "blurb": "Planned and executed the 2024 go-to-market across Clio’s product line, from Clio Manage through to the all-new Personal Injury product.",
+      "tags": [
+        "Go-to-market",
+        "Product launch",
+        "Growth"
+      ],
+      "graphic": "clio",
+      "stageLabel": "Launch tracker"
+    },
+    {
+      "id": "tecsys",
+      "company": "Tecsys",
+      "logo": "./img/logo-tecsys.svg",
+      "ratio": 4.28,
+      "role": "Product Manager",
+      "period": "Supply chain",
+      "headline": "Legacy software, made worth using.",
+      "blurb": "Redesigned the UX of software people had been stuck with for years, and reworked the day-to-day workflows they actually relied on to get through a shift.",
+      "tags": [
+        "UX redesign",
+        "Workflow",
+        "Enterprise"
+      ],
+      "graphic": "tecsys",
+      "stageLabel": "Warehouse tasks, before and after",
+      "layout": "stack"
+    },
+    {
+      "id": "darwinai",
+      "company": "DarwinAI",
+      "logo": "./img/logo-darwinai.png",
+      "ratio": 3.64,
+      "role": "Product Growth Analyst",
+      "period": "Acquired by Apple",
+      "headline": "Finding where AI vision fits.",
+      "blurb": "Led the exploratory research into product-market fit for AI vision, putting it on quality control for PCB assembly and EV battery lines to see how well it actually held up.",
+      "tags": [
+        "AI vision",
+        "Quality control",
+        "Product-market fit"
+      ],
+      "graphic": "darwinai",
+      "stageLabel": "Quality inspection"
+    }
+  ],
+  "testimonial": [
+    {
+      "id": "1",
+      "count": "5",
+      "src": "./img/jamil_dewsi.png",
+      "description": "Psssst — still waiting on their words.",
+      "author_name": "Jamil Dewsi",
+      "author_designation": "Apple"
+    },
+    {
+      "id": "2",
+      "count": "5",
+      "src": "./img/alex_bramos.png",
+      "description": "Psssst — still waiting on their words.",
+      "author_name": "Alex Bramos",
+      "author_designation": "Clio"
+    },
+    {
+      "id": "3",
+      "count": "5",
+      "src": "./img/rachna_ravi.png",
+      "description": "Psssst — still waiting on their words.",
+      "author_name": "Rachna Ravi",
+      "author_designation": "HelloFresh"
+    }
+  ]
 }

@@ -1,0 +1,20 @@
+[build]
+  command = "npm run build"
+  publish = "build"
+
+[build.environment]
+  # react-scripts 5 is happiest on an LTS line; pin it so a Netlify default
+  # bump can't change the build out from under you.
+  NODE_VERSION = "20"
+
+# Long-lived hashed assets. index.html is deliberately not cached, so a deploy
+# is visible immediately.
+[[headers]]
+  for = "/static/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/index.html"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
