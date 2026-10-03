@@ -1,5 +1,4 @@
 import { useEffect, useRef } from "react";
-import LiquidGlass from "./LiquidGlass";
 
 /* A dotted globe behind the page. It turns slowly; scrolling blows it apart
  * into drifting particles, and it pulls itself back together once scrolling
@@ -7,15 +6,8 @@ import LiquidGlass from "./LiquidGlass";
  * that does all the motion, so a frame costs JavaScript a few uniforms.
  *
  * Colours come from CSS (--globe-* in App.css), so it follows the theme.
- * It fades out over the contact chat, and stops drawing while hidden.
- *
- * Over it lies a pane of liquid glass, absent at the hero and frosting in as
- * the page scrolls into its content, so the globe is seen through glass
- * everywhere but the opening screen. */
-
-/* Glass strength from scroll: none until a quarter of a screen down, full
-   by three quarters, which is about where the first section's text lands. */
-const glassAt = (y, vh) => Math.min(Math.max((y - 0.25 * vh) / (0.5 * vh), 0), 1);
+ * It belongs to the hero: every section below has a solid background and
+ * slides over it, and once the hero is off screen it stops drawing. */
 
 const VERTEX = `
 attribute vec3 aOrigin;
@@ -157,21 +149,11 @@ const approach = (from, to, rate, dt) => from + (to - from) * (1 - Math.exp(-rat
 export default function ParticleGlobe() {
   const layerRef = useRef(null);
   const canvasRef = useRef(null);
-  const paneRef = useRef(null);
 
   useEffect(() => {
     const layer = layerRef.current;
     const canvas = canvasRef.current;
-    const pane = paneRef.current;
-    if (!layer || !canvas || !pane) return undefined;
-
-    let glass = -1;
-    const setGlass = (value) => {
-      const rounded = Math.round(value * 100) / 100;
-      if (rounded === glass) return;
-      glass = rounded;
-      pane.style.opacity = String(rounded);
-    };
+    if (!layer || !canvas) return undefined;
 
     const gl = canvas.getContext("webgl", {
       alpha: true,
@@ -293,7 +275,6 @@ export default function ParticleGlobe() {
       // Bursts apart quickly; reassembles at an unhurried pace.
       disperse = approach(disperse, goal, goal > disperse ? 7 : 2.2, dt);
       yaw += dt * (0.12 + disperse * 0.35);
-      setGlass(glassAt(y, window.innerHeight));
 
       palette = {
         dot: palette.dot.map((v, i) => approach(v, target.dot[i], 4, dt)),
@@ -313,41 +294,19 @@ export default function ParticleGlobe() {
       frame = requestAnimationFrame(tick);
     };
 
-    /* --- out of the way at the bottom: once the contact chat is on screen,
-       fade (CSS) and stop drawing; start again when scrolled back up. */
-    const contact = document.getElementById("contact");
-    let visibility;
-    if (contact && "IntersectionObserver" in window) {
-      visibility = new IntersectionObserver(
-        ([entry]) => {
-          const atChat = entry.isIntersecting || entry.boundingClientRect.top < 0;
-          layer.classList.toggle("is-hidden", atChat);
-          if (atChat) {
-            // Let the fade finish on screen before the loop stops.
-            setTimeout(() => {
-              if (layer.classList.contains("is-hidden")) hidden = true;
-            }, 700);
-          } else {
-            hidden = false;
-            wake();
-          }
-        },
-        // Counts as "at the chat" once it fills the lower 40% of the screen.
-        { rootMargin: "0px 0px -60% 0px" }
-      );
-      visibility.observe(contact);
-    }
-
-    /* Under reduced motion there's no frame loop to read scroll from, so the
-       glass follows how much of the hero is still on screen instead. */
+    /* --- only while the hero is on screen. Below it every section is
+       solid, so the globe is covered anyway; past the hero it hides and
+       stops drawing, and starts again on the way back up. */
     const hero = document.getElementById("top");
-    let heroWatch;
-    if (reduced && hero && "IntersectionObserver" in window) {
-      heroWatch = new IntersectionObserver(
-        ([entry]) => setGlass(1 - entry.intersectionRatio),
-        { threshold: Array.from({ length: 21 }, (_, i) => i / 20) }
-      );
-      heroWatch.observe(hero);
+    let visibility;
+    if (hero && "IntersectionObserver" in window) {
+      visibility = new IntersectionObserver(([entry]) => {
+        const away = !entry.isIntersecting;
+        layer.classList.toggle("is-hidden", away);
+        hidden = away;
+        if (!away) wake();
+      });
+      visibility.observe(hero);
     }
 
     const onLost = (event) => {
@@ -366,7 +325,6 @@ export default function ParticleGlobe() {
 
     resize();
     draw();
-    setGlass(glassAt(window.scrollY, window.innerHeight));
     layer.classList.add("is-ready");
     wake();
 
@@ -377,7 +335,6 @@ export default function ParticleGlobe() {
       scheme.removeEventListener("change", onTheme);
       themeObserver.disconnect();
       if (visibility) visibility.disconnect();
-      if (heroWatch) heroWatch.disconnect();
       buffers.forEach((buffer) => gl.deleteBuffer(buffer));
       gl.deleteProgram(program);
     };
@@ -386,9 +343,6 @@ export default function ParticleGlobe() {
   return (
     <div className="globe-layer" ref={layerRef} aria-hidden="true">
       <canvas ref={canvasRef} className="globe" />
-      <div className="globe-pane imsg" ref={paneRef}>
-        <LiquidGlass radius={34} bezel={90} scale={110} blur={4} />
-      </div>
     </div>
   );
 }

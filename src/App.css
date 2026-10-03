@@ -187,10 +187,10 @@ a {
 .skip-link:focus-visible {
   transform: translate(-50%, 0);
 }
-/* The particle globe and its glass: one fixed layer behind everything,
-   above the page colour but under all content. Sections with their own
-   fill (work, footer) pass over it. The layer fades in once drawn, and out
-   again over the contact chat, where it also stops costing anything. */
+/* The particle globe: a fixed layer behind everything, above the page
+   colour but under all content. It's the hero's backdrop; every section
+   below has a solid fill and slides over it. It fades in once drawn, and
+   hides once the hero is off screen, where it also stops costing anything. */
 .globe-layer {
   position: fixed;
   inset: 0;
@@ -217,59 +217,13 @@ a {
   height: 100%;
 }
 
-/* A pane of liquid glass over the globe, nearly the size of the screen.
-   Its opacity is set from scroll (ParticleGlobe.jsx): clear at the hero,
-   frosted below it. It's inset with rounded corners, like an iOS sheet,
-   because glass reads as glass at its edges: a bright rim, a sheen, and
-   the globe bending where it passes under them. Full-bleed, it was just
-   a blur. */
-.globe-pane {
-  position: absolute;
-  inset: 12px;
-  border-radius: 34px;
-  opacity: 0;
-}
-
-.globe-pane > .glass {
-  border-radius: inherit;
-  background:
-    linear-gradient(to bottom, var(--glass-rim) 0, transparent 1.5px),
-    linear-gradient(to top, var(--glass-rim-soft) 0, transparent 1.5px),
-    color-mix(in srgb, var(--bg) 18%, transparent);
-  box-shadow:
-    inset 0 0 0 1px var(--glass-rim-soft),
-    0 0 0 0.5px var(--glass-shade),
-    0 24px 70px var(--glass-shade);
-  -webkit-backdrop-filter: blur(4px) saturate(1.4);
-  backdrop-filter: blur(4px) saturate(1.4);
-}
-
-/* A slow diagonal sheen, faint enough to read as light on a surface. */
-.globe-pane > .glass::before {
-  background: linear-gradient(
-    135deg,
-    rgba(255, 255, 255, 0.28) 0%,
-    rgba(255, 255, 255, 0) 38%,
-    rgba(255, 255, 255, 0) 70%,
-    rgba(255, 255, 255, 0.12) 100%
-  );
-}
-
-:root[data-theme="dark"] .globe-pane > .glass::before {
-  opacity: 0.35;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) .globe-pane > .glass::before {
-    opacity: 0.35;
-  }
-}
-
-@media (max-width: 700px) {
-  .globe-pane {
-    inset: 8px;
-    border-radius: 28px;
-  }
+/* Everything after the hero is solid, so the globe stays the hero's: these
+   sections slide up over it like a curtain. (Work and the footer bring
+   their own tint.) */
+#about,
+.contact {
+  position: relative;
+  background: var(--bg);
 }
 
 /* Present to a screen reader, absent to everyone else. */
@@ -744,9 +698,6 @@ a {
 .work {
   padding-block: clamp(4.5rem, 9vw, 7rem) clamp(3rem, 6vw, 5rem);
   background: var(--bg-tint);
-  /* Not quite opaque, so the background globe shows faintly through
-     instead of being cut off in a hard line at the section's edge. */
-  background: color-mix(in srgb, var(--bg-tint) 84%, transparent);
 }
 
 .work__head {
