@@ -226,6 +226,38 @@ a {
   background: var(--bg);
 }
 
+/* The curtain's leading edge is frosted glass, not a hard line: across
+   About's (empty) top padding the fill ramps in from clear while a blur
+   ramps up, so the globe carries on into it, softening and fading rather
+   than being cut off. It's the scroll edge effect from iOS. */
+#about {
+  --curtain: clamp(4.5rem, 9vw, 8rem);
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    var(--bg) calc(var(--curtain) * 0.75)
+  );
+}
+
+#about::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: var(--curtain);
+  pointer-events: none;
+  -webkit-backdrop-filter: blur(12px) saturate(1.3);
+  backdrop-filter: blur(12px) saturate(1.3);
+  /* The frost peaks mid-band and fades out again before the band ends, so
+     the blur never meets the solid fill in a line. */
+  -webkit-mask-image: linear-gradient(to bottom, transparent, #000 35%, #000 55%, transparent);
+  mask-image: linear-gradient(to bottom, transparent, #000 35%, #000 55%, transparent);
+}
+
+#about > .shell {
+  position: relative;
+  z-index: 1;
+}
+
 /* Present to a screen reader, absent to everyone else. */
 .sr-only {
   position: absolute;
