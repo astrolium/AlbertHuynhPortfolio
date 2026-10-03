@@ -7,7 +7,7 @@ const STORAGE_KEY = "ah-appearance";
 /* Light first: it's the default, and the cycle should start where the page does. */
 export const THEMES = ["light", "dark", "auto"];
 
-const CHROME = { light: "#fefae0", dark: "#1f2a13" };
+const CHROME = { light: "#faf9f5", dark: "#1f2a13" };
 
 function read() {
   try {

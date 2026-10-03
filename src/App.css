@@ -8,22 +8,23 @@
 :root {
   color-scheme: light;
 
-  --bg: #fefae0;
-  --bg-tint: #f4edcc;
-  --surface: #fffdf0;
+  --bg: #faf9f5;
+  --bg-tint: #f5f0e8;
+  --surface: #fdfcfa;
   --surface-2: #f3e1be;
-  --chrome: rgba(254, 250, 224, 0.78);
-  --chrome-strong: rgba(254, 250, 224, 0.94);
+  --chrome: rgba(250, 249, 245, 0.78);
+  --chrome-strong: rgba(250, 249, 245, 0.94);
   --chrome-edge: rgba(255, 255, 255, 0.6);
 
   --text: #283618;
   --text-2: #3d4a28;
   --text-3: #5a6534;
-  --hairline: #e6dfbf;
+  --hairline: #e6dfd8;
   --fill: rgba(40, 54, 24, 0.06);
   --fill-strong: rgba(40, 54, 24, 0.1);
 
-  /* Palette: cream #fefae0, forest #283618, olive #606c38, caramel #dda15e.
+  /* Backgrounds are the original warm off-white (#faf9f5, #f5f0e8).
+     Palette: cream #fefae0, forest #283618, olive #606c38, caramel #dda15e.
      Olive carries the accents with text on them (cream on olive is 5.4:1).
      Caramel is only 2.1:1 on cream, so in light it goes on things without
      text: the globe's highlight dots, pill dots, tags, selection. In dark
@@ -1528,7 +1529,7 @@ a {
   --link: var(--accent-press);
   --sent-disabled: rgba(40, 54, 24, 0.18);
   --stamp: #6b7048;
-  --glass-tint: rgba(254, 250, 224, 0.42);
+  --glass-tint: rgba(250, 249, 245, 0.42);
   --glass-rim: rgba(255, 255, 255, 0.85);
   --glass-rim-soft: rgba(255, 255, 255, 0.25);
   --glass-shade: rgba(40, 54, 24, 0.1);
