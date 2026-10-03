@@ -1346,6 +1346,9 @@ a {
 }
 
 .chat__title {
+  /* Above the header's fade band, which reaches up past it. */
+  position: relative;
+  z-index: 4;
   margin-bottom: 2.5rem;
   text-align: center;
 }
