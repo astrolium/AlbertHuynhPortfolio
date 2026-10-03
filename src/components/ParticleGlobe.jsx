@@ -10,7 +10,9 @@ import { useEffect, useRef } from "react";
  * stops drawing while hidden. */
 
 /* How strong the globe stays while text it would sit behind is on screen. */
-const DIM_BEHIND_TEXT = 0.25;
+// The About copy is on glass, which does most of the quieting; this only
+// takes the edge off, so the globe still shows through the pane.
+const DIM_BEHIND_TEXT = 0.6;
 
 const VERTEX = `
 attribute vec3 aOrigin;

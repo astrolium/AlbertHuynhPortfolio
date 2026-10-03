@@ -66,7 +66,7 @@ function displacementMap(width, height, radius, bezel) {
  * Drop inside any positioned element with a border-radius. It fills the
  * parent, refracts what's behind it, and re-measures when the parent resizes.
  */
-export default function LiquidGlass({ radius = 999, bezel = 14, scale = 22 }) {
+export default function LiquidGlass({ radius = 999, bezel = 14, scale = 22, blur = 1.5 }) {
   const ref = useRef(null);
   const id = `glass-${useId().replace(/:/g, "")}`;
   const [map, setMap] = useState(null);
@@ -129,7 +129,7 @@ export default function LiquidGlass({ radius = 999, bezel = 14, scale = 22 }) {
         ref={ref}
         className="glass"
         data-refract={map ? "" : undefined}
-        style={map ? { backdropFilter: `url(#${id}) blur(1.5px) saturate(1.7)` } : undefined}
+        style={map ? { backdropFilter: `url(#${id}) blur(${blur}px) saturate(1.7)` } : undefined}
         aria-hidden="true"
       />
     </>

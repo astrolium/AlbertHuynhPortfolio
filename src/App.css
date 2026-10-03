@@ -1522,6 +1522,45 @@ a {
   padding-top: 0.4rem;
 }
 
+/* The glass pane behind the About copy. Its tint is heavier than the
+   chrome's, since text sits on it rather than a few controls. */
+.about__panel {
+  position: relative;
+  isolation: isolate;
+  max-width: calc(58ch + 2 * clamp(1.25rem, 3vw, 2.25rem));
+  padding: clamp(1.25rem, 3vw, 2.25rem);
+  border-radius: 28px;
+}
+
+.about__panel > .glass {
+  --glass-tint: rgba(250, 249, 245, 0.62);
+}
+
+:root[data-theme="dark"] .about__panel > .glass {
+  --glass-tint: rgba(30, 29, 26, 0.45);
+}
+
+/* The sheen that reads as a highlight on a small pill turns into a grey
+   band across a pane this size in dark; keep just a hint of it. */
+:root[data-theme="dark"] .about__panel > .glass::before {
+  opacity: 0.25;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .about__panel > .glass {
+    --glass-tint: rgba(30, 29, 26, 0.45);
+  }
+
+  :root:not([data-theme="light"]) .about__panel > .glass::before {
+    opacity: 0.25;
+  }
+}
+
+.about__panel > :not(.glass):not(svg) {
+  position: relative;
+  z-index: 1;
+}
+
 @media (max-width: 860px) {
   .about {
     grid-template-columns: minmax(0, 1fr);
