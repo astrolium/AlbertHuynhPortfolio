@@ -244,7 +244,12 @@ a {
   background: linear-gradient(to bottom, transparent var(--curtain), var(--bg) var(--curtain));
 }
 
-#about::before {
+/* Two layers over the same band. ::before is the frost: a blur that rises
+   and falls, masked so it never meets the solid fill in a line. ::after is
+   the colour: clear at the top, solid by 80%, and never masked, so it can't
+   fade away with the frost and leave the globe showing through. */
+#about::before,
+#about::after {
   content: "";
   position: absolute;
   top: calc(-1 * var(--lead));
@@ -252,13 +257,17 @@ a {
   right: 0;
   height: calc(var(--lead) + var(--curtain));
   pointer-events: none;
-  background: linear-gradient(to bottom, transparent, var(--bg) 80%);
+}
+
+#about::before {
   -webkit-backdrop-filter: blur(12px) saturate(1.3);
   backdrop-filter: blur(12px) saturate(1.3);
-  /* The frost peaks mid-band and fades out again before the band ends, so
-     the blur never meets the solid fill in a line. */
   -webkit-mask-image: linear-gradient(to bottom, transparent, #000 35%, #000 60%, transparent);
   mask-image: linear-gradient(to bottom, transparent, #000 35%, #000 60%, transparent);
+}
+
+#about::after {
+  background: linear-gradient(to bottom, transparent, var(--bg) 80%);
 }
 
 #about > .shell {
