@@ -1,5 +1,5 @@
 import { useScrollTo } from "../lib/motion";
-import { EMAIL } from "./Contact";
+import Bubble from "../components/Bubble";
 
 const NAV_OFFSET = 84;
 
@@ -14,11 +14,18 @@ export default function Hero() {
           Product manager, explorer and{" "}
           <span className="hero__accent">creative</span>.
         </h1>
-        <p className="hero__lede">Based anywhere.</p>
+        <p className="hero__lede">Based anywhere. Usually one text away.</p>
 
         <div className="hero__actions">
-          <a className="button button--primary" href={`mailto:${EMAIL}`}>
-            Email me
+          <a
+            className="button button--primary"
+            href="#contact"
+            onClick={(event) => {
+              event.preventDefault();
+              scrollTo("contact", NAV_OFFSET);
+            }}
+          >
+            Text me
           </a>
           <a
             className="button button--quiet"
@@ -42,6 +49,22 @@ export default function Hero() {
           alt="Portrait of Albert Huynh"
           fetchpriority="high"
         />
+        {/* The first line of the conversation that the contact section
+            finishes. Tapping it goes straight there. */}
+        <div className="imsg hero__note">
+          <Bubble
+            as="a"
+            href="#contact"
+            tail
+            className="hero__bubble"
+            onClick={(event) => {
+              event.preventDefault();
+              scrollTo("contact", NAV_OFFSET);
+            }}
+          >
+            hey 👋 i left you a message at the bottom
+          </Bubble>
+        </div>
       </div>
     </section>
   );

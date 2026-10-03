@@ -9,6 +9,7 @@ import { CircleHalf, Moon, Sun } from "@phosphor-icons/react";
 import { Spring } from "../lib/spring";
 import { useTheme } from "../lib/theme";
 import Wordmark from "../components/Wordmark";
+import LiquidGlass from "../components/LiquidGlass";
 
 /* Names for what's in them, not vague umbrellas: "Work", not "Home". */
 const LINKS = [
@@ -195,6 +196,8 @@ export default function Nav() {
         </a>
 
         <nav className="nav__links" aria-label="Sections">
+          {/* The same liquid glass as the chat composer at the bottom. */}
+          <LiquidGlass bezel={12} scale={18} />
           <ul ref={listRef}>
             <li className="nav__indicator-slot" aria-hidden="true">
               <span className="nav__indicator" ref={indicatorRef} />
@@ -218,7 +221,7 @@ export default function Nav() {
         <div className="nav__actions">
           <button
             type="button"
-            className="icon-button"
+            className="icon-button icon-button--glass"
             onClick={cycle}
             aria-label={THEME_LABEL[theme]}
             title={THEME_LABEL[theme]}
@@ -229,7 +232,7 @@ export default function Nav() {
           <button
             type="button"
             ref={toggleRef}
-            className={`icon-button nav__toggle ${open ? "is-open" : ""}`}
+            className={`icon-button icon-button--glass nav__toggle ${open ? "is-open" : ""}`}
             aria-expanded={open}
             aria-controls="nav-sheet"
             aria-label={open ? "Close menu" : "Open menu"}

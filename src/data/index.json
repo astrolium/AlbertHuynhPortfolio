@@ -15,6 +15,7 @@
         "Data research"
       ],
       "graphic": "addepar",
+      "aside": { "text": "the largest private-fund cashflow dataset there is, and they let me poke at it", "reaction": "🤓" },
       "stageLabel": "Private Fund Benchmarks"
     },
     {
@@ -32,6 +33,7 @@
         "Growth"
       ],
       "graphic": "clio",
+      "aside": { "text": "launched a brand-new personal injury product. no lawyers were harmed", "reaction": "😂" },
       "stageLabel": "Launch tracker"
     },
     {
@@ -49,6 +51,7 @@
         "Enterprise"
       ],
       "graphic": "tecsys",
+      "aside": { "text": "people were stuck with this software for years. now they’re stuck with a nicer one", "reaction": "💀" },
       "stageLabel": "Warehouse tasks, before and after",
       "layout": "stack"
     },
@@ -67,6 +70,7 @@
         "Product-market fit"
       ],
       "graphic": "darwinai",
+      "aside": { "text": "then apple bought the company. not saying it was me. not saying it wasn’t", "reaction": "👀" },
       "stageLabel": "Quality inspection"
     }
   ],

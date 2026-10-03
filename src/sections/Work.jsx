@@ -1,5 +1,6 @@
 import data from "../data/index.json";
 import GRAPHICS from "../components/graphics";
+import Bubble from "../components/Bubble";
 import { useReveal } from "../lib/motion";
 
 function Chapter({ item, index }) {
@@ -62,6 +63,13 @@ function Chapter({ item, index }) {
               )}
             </div>
           </figure>
+          {item.aside && (
+            <div className="imsg chapter__aside">
+              <Bubble tail reaction={item.aside.reaction}>
+                {item.aside.text}
+              </Bubble>
+            </div>
+          )}
         </div>
       </div>
     </section>

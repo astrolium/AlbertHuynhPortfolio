@@ -1314,36 +1314,762 @@ a {
   }
 }
 
-/* ------------------------------------------------------------- contact --- */
+/* ------------------------------------------------------------- contact ---
+   An iMessage thread: it scrolls past like a real one, and the reply box at
+   the bottom takes the visitor's email instead of a mailto button. The
+   chrome (name pill, composer) is liquid glass; see LiquidGlass.jsx.
+   ------------------------------------------------------------------------ */
 
-.contact__inner {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1rem;
+/* Bubble and glass colours. They borrow the site's palette (coral for what
+   you send, a warm grey for what Albert sends) so the chat reads as part of
+   the page rather than a screenshot of another app. */
+.imsg,
+.nav {
+  --received: #ede7dd;
+  --received-ink: var(--text);
+  --sent: var(--accent);
+  --on-sent: var(--on-accent);
+  --link: var(--accent-press);
+  --sent-disabled: rgba(20, 20, 19, 0.16);
+  --stamp: #8a8780;
+  --glass-tint: rgba(250, 249, 245, 0.42);
+  --glass-rim: rgba(255, 255, 255, 0.85);
+  --glass-rim-soft: rgba(255, 255, 255, 0.25);
+  --glass-shade: rgba(20, 20, 19, 0.1);
+}
+
+.chat {
+  position: relative;
+  max-width: 420px;
+  margin-inline: auto;
+  padding-inline: 20px;
+}
+
+.chat__title {
+  margin-bottom: 2.5rem;
   text-align: center;
 }
 
-.contact__title {
-  max-width: 16ch;
+:root[data-theme="dark"] .imsg,
+:root[data-theme="dark"] .nav {
+  --received: #2e2b27;
+  --link: var(--accent);
+  --sent-disabled: rgba(250, 249, 245, 0.2);
+  --stamp: #8e8c86;
+  --glass-tint: rgba(37, 35, 32, 0.4);
+  --glass-rim: rgba(255, 255, 255, 0.28);
+  --glass-rim-soft: rgba(255, 255, 255, 0.06);
+  --glass-shade: rgba(0, 0, 0, 0.35);
 }
 
-.contact__lede {
-  max-width: 46ch;
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .imsg,
+  :root:not([data-theme="light"]) .nav {
+    --received: #2e2b27;
+    --link: var(--accent);
+    --sent-disabled: rgba(250, 249, 245, 0.2);
+    --stamp: #8e8c86;
+    --glass-tint: rgba(37, 35, 32, 0.4);
+    --glass-rim: rgba(255, 255, 255, 0.28);
+    --glass-rim-soft: rgba(255, 255, 255, 0.06);
+    --glass-shade: rgba(0, 0, 0, 0.35);
+  }
 }
 
-.contact__actions {
+/* The glass itself: a tinted pane with a bright rim, a top sheen, and, in
+   Chromium, the refraction filter on whatever is behind it. */
+.glass {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: inherit;
+  background:
+    linear-gradient(to bottom, var(--glass-rim) 0, transparent 1.5px),
+    linear-gradient(to top, var(--glass-rim-soft) 0, transparent 1.5px),
+    var(--glass-tint);
+  box-shadow: 0 0 0 0.5px var(--glass-shade), 0 8px 28px var(--glass-shade);
+  -webkit-backdrop-filter: blur(14px) saturate(1.8);
+  backdrop-filter: blur(14px) saturate(1.8);
+  pointer-events: none;
+}
+
+.glass::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.22) 0%,
+    rgba(255, 255, 255, 0) 55%,
+    rgba(255, 255, 255, 0.08) 100%
+  );
+}
+
+/* --- header: avatar over a name pill, pinned under the nav as you read. */
+
+.chat__header {
+  position: sticky;
+  top: calc(var(--nav-height) + 12px);
+  z-index: 3;
   display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 0.75rem;
-  margin-top: 0.75rem;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 2.5rem;
+  pointer-events: none;
 }
 
-.contact__address {
-  color: var(--text-3);
-  font-size: 0.9375rem;
-  letter-spacing: 0.01em;
+.chat__avatar {
+  position: relative;
+  z-index: 1;
+  width: 56px;
+  height: 56px;
+  margin-bottom: -6px;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: 50% 18%;
+  box-shadow: 0 0 0 2px var(--bg);
+}
+
+.chat__name {
+  position: relative;
+  isolation: isolate;
+  padding: 7px 14px 6px;
+  border-radius: 999px;
+  color: var(--text);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: -0.1px;
+}
+
+.chat__name-text {
+  position: relative;
+  z-index: 1;
+}
+
+/* --- the thread */
+
+.chat__thread {
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 2rem;
+}
+
+.chat__stamp {
+  align-self: center;
+  margin: 1rem 0 1.5rem;
+  color: var(--stamp);
+  font-size: 11px;
+  line-height: 15px;
+}
+
+.chat__stamp strong {
+  font-weight: 600;
+}
+
+.bubble {
+  position: relative;
+  width: fit-content;
+  max-width: 78%;
+  margin-bottom: 3px;
+  padding: 8px 14px;
+  border-radius: 20px;
+  background: var(--received);
+  color: var(--received-ink);
+  font-size: 17px;
+  line-height: 22px;
+  letter-spacing: -0.4px;
+  overflow-wrap: break-word;
+}
+
+.bubble--tail {
+  margin-bottom: 14px;
+}
+
+.bubble a {
+  color: var(--link);
+  text-decoration: none;
+}
+
+.bubble a:hover {
+  text-decoration: underline;
+}
+
+/* The hook: a coloured blob, with a page-coloured blob carving it out. */
+.bubble--tail::before,
+.bubble--tail::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  height: 20px;
+}
+
+.bubble--tail::before {
+  left: -7px;
+  width: 20px;
+  background: var(--received);
+  border-bottom-right-radius: 16px 14px;
+}
+
+.bubble--tail::after {
+  left: -26px;
+  width: 26px;
+  background: var(--bg);
+  border-bottom-right-radius: 10px;
+}
+
+.bubble--sent {
+  align-self: flex-end;
+  background: var(--sent);
+  color: var(--on-sent);
+}
+
+.bubble--sent.bubble--tail {
+  margin-bottom: 2px;
+}
+
+.bubble--sent.bubble--tail::before {
+  left: auto;
+  right: -7px;
+  background: var(--sent);
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 16px 14px;
+}
+
+.bubble--sent.bubble--tail::after {
+  left: auto;
+  right: -26px;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 10px;
+}
+
+/* Tapbacks sit on the bubble's top-right corner, like the real thing. */
+.bubble--reacted {
+  margin-top: 18px;
+}
+
+.bubble__reaction {
+  position: absolute;
+  top: -20px;
+  right: -14px;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 30px;
+  border-radius: 999px;
+  background: var(--received);
+  box-shadow: 0 0 0 2px var(--bg);
+  font-size: 15px;
+  line-height: 1;
+}
+
+.bubble__reaction::after {
+  content: "";
+  position: absolute;
+  bottom: -4px;
+  left: 4px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--received);
+  box-shadow: 0 0 0 2px var(--bg);
+  z-index: -1;
+}
+
+.bubble--typing {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+  height: 38px;
+  margin-bottom: 14px;
+  padding-inline: 14px;
+}
+
+.typing-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--stamp);
+  opacity: 0.35;
+  animation: typing-pulse 1.4s ease-in-out infinite;
+}
+
+.typing-dot:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.typing-dot:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes typing-pulse {
+  0%,
+  60%,
+  100% {
+    opacity: 0.35;
+  }
+  30% {
+    opacity: 1;
+  }
+}
+
+.chat__ask {
+  min-height: 52px;
+}
+
+.chat__receipt {
+  align-self: flex-end;
+  margin: 2px 4px 14px 0;
+  color: var(--stamp);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.chat__receipt--failed {
+  color: #d70015;
+}
+
+:root[data-theme="dark"] .chat__receipt--failed {
+  color: #ff6961;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .chat__receipt--failed {
+    color: #ff6961;
+  }
+}
+
+/* While sending: a rounded bar that fills left to right, easing off as it
+   nears the end, the way iOS does while it waits on the network. */
+.chat__progress {
+  align-self: flex-end;
+  width: 96px;
+  height: 4px;
+  margin: 8px 4px 17px 0;
+  overflow: hidden;
+  border-radius: 999px;
+  background: var(--fill-strong);
+}
+
+.chat__progress-fill {
+  display: block;
+  width: 88%;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--sent);
+}
+
+.chat__progress--done .chat__progress-fill {
+  width: 100%;
+  animation: none !important;
+  transition: width 260ms var(--ease);
+}
+
+/* What you send, plus iMessage's red "!" when it doesn't go. The alert grows
+   its own room, so the bubble slides left to make space for it. */
+.chat__out {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.chat__alert {
+  display: grid;
+  flex: 0 0 auto;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  margin-left: 8px;
+  overflow: hidden;
+  border-radius: 50%;
+  background: #d70015;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+/* --- the composer: sticks to the bottom of the screen while the thread is
+   on it, so the bubbles slide underneath the glass. */
+
+.composer {
+  position: sticky;
+  bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+  z-index: 3;
+  isolation: isolate;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  max-width: 380px;
+  height: 46px;
+  margin: 0 auto;
+  padding-right: 7px;
+  border-radius: 999px;
+  transition: transform 460ms cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+.composer:focus-within {
+  transform: scale(1.015);
+}
+
+.composer:active:not(:has(.composer__send:active)) {
+  transform: scale(1.03);
+  transition-duration: 80ms;
+}
+
+.composer__input {
+  position: relative;
+  z-index: 1;
+  flex: 1 1 auto;
+  align-self: stretch;
+  min-width: 0;
+  padding: 0 0 0 18px;
+  border: 0;
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  font-size: 17px;
+  letter-spacing: -0.4px;
+}
+
+.composer__input::placeholder {
+  color: var(--stamp);
+}
+
+.composer__input:focus {
+  outline: none;
+}
+
+.composer:has(.composer__input:focus-visible) {
+  outline: 2px solid var(--sent);
+  outline-offset: 3px;
+}
+
+/* The send button only grows in once there's an address worth sending. */
+.composer__send {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  flex: 0 0 auto;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: var(--sent);
+  color: var(--on-sent);
+  cursor: pointer;
+  transition: transform 420ms cubic-bezier(0.34, 1.56, 0.64, 1),
+    background-color 200ms var(--ease);
+}
+
+.composer__send:disabled {
+  background: var(--sent-disabled);
+  cursor: default;
+  transform: scale(0.82);
+}
+
+.composer__send:not(:disabled):active {
+  transform: scale(1.15);
+  transition-duration: 80ms;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  /* Bubbles condense out of a blur as they scroll in, and dissolve again
+     as they leave, so the thread feels like it's moving under the glass. */
+  @supports (animation-timeline: view()) {
+    /* Not the live ones: a bubble arriving has its own entrance, and this
+       rule is specific enough to silently replace it. */
+    .chat__thread > .bubble:not(.bubble--arrive, .bubble--reply),
+    .chat__thread > .chat__stamp {
+      animation: edge-dissolve linear both;
+      animation-timeline: view();
+      animation-range: cover;
+    }
+  }
+
+  .bubble__reaction {
+    animation: reaction-pop 600ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
+    animation-timeline: view();
+    animation-range: entry 40% entry 100%;
+  }
+
+  .bubble--arrive {
+    animation: bubble-arrive 520ms cubic-bezier(0.34, 1.4, 0.64, 1) both;
+    transform-origin: left bottom;
+  }
+
+  /* A reply grows out of the typing bubble it replaces: small and soft at
+     the dots' corner, stretching past full size, then settling. */
+  .bubble--reply {
+    animation: bubble-reply 620ms cubic-bezier(0.3, 0.9, 0.4, 1) both;
+    transform-origin: left bottom;
+  }
+
+  .bubble--later {
+    animation-delay: 700ms;
+  }
+
+  /* A sent bubble lifts out of the composer and lands in the thread. */
+  .bubble--send {
+    animation: bubble-send 700ms cubic-bezier(0.25, 0.8, 0.3, 1) both;
+    transform-origin: right bottom;
+  }
+
+  .chat__alert {
+    animation: alert-in 520ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  }
+
+  .chat__receipt {
+    animation: receipt-in 320ms var(--ease) both;
+  }
+
+  .chat__progress-fill {
+    animation: progress-fill 1400ms both;
+  }
+
+  .composer--nudge {
+    animation: composer-nudge 420ms cubic-bezier(0.36, 0.07, 0.19, 0.97);
+  }
+}
+
+@keyframes edge-dissolve {
+  0% {
+    opacity: 0;
+    filter: blur(3px);
+  }
+  12% {
+    opacity: 1;
+    filter: blur(0);
+  }
+  86% {
+    opacity: 1;
+    filter: blur(0);
+  }
+  100% {
+    opacity: 0;
+    filter: blur(3px);
+  }
+}
+
+@keyframes reaction-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.3) rotate(-20deg);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes bubble-reply {
+  0% {
+    opacity: 0;
+    filter: blur(3px);
+    transform: scale(0.3, 0.6);
+  }
+  55% {
+    opacity: 1;
+    filter: blur(0);
+    transform: scale(1.03, 1.04);
+  }
+  80% {
+    transform: scale(0.99, 0.995);
+  }
+  100% {
+    opacity: 1;
+    filter: blur(0);
+    transform: none;
+  }
+}
+
+@keyframes bubble-arrive {
+  from {
+    opacity: 0;
+    transform: scale(0.6) translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Up out of the composer, a touch past where it lands, then settle. */
+@keyframes bubble-send {
+  0% {
+    opacity: 0;
+    transform: translateY(110px) scale(0.55);
+  }
+  55% {
+    opacity: 1;
+    transform: translateY(-8px) scale(1.03);
+  }
+  80% {
+    transform: translateY(2px) scale(0.995);
+  }
+  100% {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes alert-in {
+  from {
+    width: 0;
+    margin-left: 0;
+    opacity: 0;
+    transform: scale(0.3);
+  }
+  to {
+    width: 22px;
+    margin-left: 8px;
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Quick off the line, then slower and slower: it tries to finish, but only
+   the server gets to say it's done. */
+@keyframes progress-fill {
+  0% {
+    width: 0;
+    animation-timing-function: cubic-bezier(0.2, 0.7, 0.4, 1);
+  }
+  45% {
+    width: 62%;
+    animation-timing-function: cubic-bezier(0.3, 0.3, 0.5, 1);
+  }
+  100% {
+    width: 88%;
+  }
+}
+
+@keyframes receipt-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Squash and stretch, so a refused send feels like jelly, not an error. */
+@keyframes composer-nudge {
+  20% {
+    transform: translateX(-8px) scaleX(1.03);
+  }
+  45% {
+    transform: translateX(6px) scaleX(0.98);
+  }
+  70% {
+    transform: translateX(-3px);
+  }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .glass {
+    background: var(--surface);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none !important;
+  }
+}
+
+/* ------------------------------------------------- chat, up the page ---
+   The contact thread's pieces, used earlier so the ending is a payoff and
+   not a surprise: glass in the nav, a bubble on the portrait, and an aside
+   beside each work figure.
+   ------------------------------------------------------------------------ */
+
+.nav__links {
+  position: relative;
+  isolation: isolate;
+  padding: 4px;
+  border-radius: 999px;
+}
+
+.nav__links ul {
+  z-index: 1;
+}
+
+.nav__indicator,
+.nav__link {
+  border-radius: 999px;
+}
+
+.icon-button--glass {
+  background: var(--glass-tint);
+  box-shadow: 0 0 0 0.5px var(--glass-shade), inset 0 1px 0 var(--glass-rim),
+    0 6px 18px var(--glass-shade);
+  -webkit-backdrop-filter: blur(14px) saturate(1.8);
+  backdrop-filter: blur(14px) saturate(1.8);
+}
+
+.icon-button--glass:hover:not(:disabled) {
+  background: var(--glass-tint);
+  transform: scale(1.06);
+}
+
+.hero__note {
+  position: absolute;
+  bottom: 9%;
+  left: clamp(-2.5rem, -4vw, 0rem);
+  z-index: 2;
+}
+
+.hero__note .bubble {
+  display: block;
+  max-width: 15rem;
+  box-shadow: var(--shadow-2);
+  transition: transform 420ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* The tail carves itself out of the page colour, which would leave a cream
+   notch on the photo; here the bubble floats, so it goes without. */
+.hero__note .bubble--tail::after {
+  display: none;
+}
+
+.hero__note .bubble:hover {
+  transform: translateY(-3px) scale(1.03);
+  text-decoration: none;
+}
+
+.chapter__aside {
+  position: absolute;
+  bottom: -2.25rem;
+  left: clamp(0.75rem, 5%, 2rem);
+  z-index: 2;
+}
+
+.chapter[data-side="right"] .chapter__aside {
+  left: auto;
+  right: clamp(0.75rem, 5%, 2rem);
+}
+
+.chapter__aside .bubble {
+  max-width: min(19rem, 80vw);
+  margin: 0;
+  box-shadow: var(--shadow-1);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .hero__note .bubble {
+    animation: bubble-arrive 560ms cubic-bezier(0.34, 1.4, 0.64, 1) 900ms both;
+  }
+
+  @supports (animation-timeline: view()) {
+    .chapter__aside .bubble {
+      animation: bubble-arrive linear both;
+      animation-timeline: view();
+      animation-range: entry 20% entry 80%;
+    }
+  }
 }
 
 /* -------------------------------------------------------------- footer --- */

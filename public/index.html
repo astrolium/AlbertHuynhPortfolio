@@ -47,5 +47,13 @@
   <body>
     <noscript>This site needs JavaScript to run.</noscript>
     <div id="root"></div>
+
+    <!-- Netlify reads forms from static HTML at deploy time, never from the
+         React bundle. This hidden twin registers the "contact" form; the chat
+         composer in src/sections/Contact.jsx posts to it. -->
+    <form name="contact" data-netlify="true" netlify-honeypot="bot-field" hidden>
+      <input type="email" name="email" />
+      <input name="bot-field" />
+    </form>
   </body>
 </html>
