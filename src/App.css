@@ -2154,10 +2154,35 @@ a {
   right: clamp(0.75rem, 5%, 2rem);
 }
 
+/* These sit on the figures, whose surface is nearly the bubble's colour,
+   so they float: a hairline edge and a soft, warm, layered shadow, the way
+   a notification sits over content. */
 .chapter__aside .bubble {
   max-width: min(19rem, 80vw);
   margin: 0;
-  box-shadow: var(--shadow-1);
+  box-shadow: 0 0 0 0.5px rgba(20, 20, 19, 0.1), 0 2px 6px rgba(61, 45, 30, 0.1),
+    0 14px 34px rgba(61, 45, 30, 0.18);
+}
+
+/* In dark, the figure and the bubble were a shade apart; lift the bubble. */
+:root[data-theme="dark"] .chapter__aside {
+  --received: #3a3631;
+}
+
+:root[data-theme="dark"] .chapter__aside .bubble {
+  box-shadow: 0 0 0 0.5px rgba(250, 249, 245, 0.12), 0 2px 6px rgba(0, 0, 0, 0.35),
+    0 14px 34px rgba(0, 0, 0, 0.5);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .chapter__aside {
+    --received: #3a3631;
+  }
+
+  :root:not([data-theme="light"]) .chapter__aside .bubble {
+    box-shadow: 0 0 0 0.5px rgba(250, 249, 245, 0.12), 0 2px 6px rgba(0, 0, 0, 0.35),
+      0 14px 34px rgba(0, 0, 0, 0.5);
+  }
 }
 
 @media (prefers-reduced-motion: no-preference) {

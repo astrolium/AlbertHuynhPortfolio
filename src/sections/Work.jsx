@@ -65,7 +65,7 @@ function Chapter({ item, index }) {
           </figure>
           {item.aside && (
             <div className="imsg chapter__aside">
-              <Bubble tail reaction={item.aside.reaction}>
+              <Bubble reaction={item.aside.reaction}>
                 {item.aside.text}
               </Bubble>
             </div>
