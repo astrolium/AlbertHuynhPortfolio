@@ -425,6 +425,25 @@ a {
   z-index: 1;
 }
 
+/* The primary action as tinted glass: the accent's deeper shade at 85%, so
+   the glass still shows through but the label holds 4.5:1 or better even
+   with the page itself behind it (cream on olive 4.9:1; forest on caramel
+   6.2:1 in dark). */
+.button--glass-tinted {
+  color: var(--on-accent);
+}
+
+.button--glass-tinted > .glass {
+  --glass-tint: color-mix(in srgb, var(--accent-press) 85%, transparent);
+}
+
+.button--glass-tinted:hover > .glass {
+  background:
+    linear-gradient(to bottom, var(--glass-rim) 0, transparent 1.5px),
+    linear-gradient(to top, var(--glass-rim-soft) 0, transparent 1.5px),
+    color-mix(in srgb, var(--accent-press) 95%, transparent);
+}
+
 .icon-button {
   display: inline-flex;
   align-items: center;

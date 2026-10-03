@@ -19,14 +19,15 @@ export default function Hero() {
 
         <div className="hero__actions">
           <a
-            className="button button--primary"
+            className="imsg button button--glass button--glass-tinted"
             href="#contact"
             onClick={(event) => {
               event.preventDefault();
               scrollTo("contact", NAV_OFFSET);
             }}
           >
-            Text me
+            <LiquidGlass radius={8} bezel={10} scale={16} />
+            <span className="button__label">Text me</span>
           </a>
           <a
             className="imsg button button--glass"
