@@ -1051,6 +1051,34 @@ a {
   }
 }
 
+/* --- previously: past roles as a quiet row of logos under the current
+       one, in muted ink so Addepar stays the focus. --- */
+
+.previously {
+  margin-top: clamp(0.5rem, 2vw, 1.5rem);
+  text-align: center;
+}
+
+.previously__label {
+  color: var(--text-3);
+  font-size: 0.875rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+}
+
+.previously__logos {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 1.25rem clamp(2rem, 5vw, 3.5rem);
+  margin-top: 1.1rem;
+}
+
+.previously .chapter__logo {
+  background: var(--text-3);
+}
+
 /* --- the stage: a flat frame on the page, lifting into place --- */
 
 .chapter__stage {
@@ -1834,18 +1862,6 @@ a {
   line-height: 1;
 }
 
-.bubble__reaction::after {
-  content: "";
-  position: absolute;
-  bottom: -4px;
-  left: 4px;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--received);
-  box-shadow: 0 0 0 2px var(--bg);
-  z-index: -1;
-}
 
 .bubble--typing {
   display: flex;
@@ -1966,7 +1982,9 @@ a {
 .composer {
   position: sticky;
   bottom: calc(20px + env(safe-area-inset-bottom, 0px));
-  z-index: 3;
+  /* Above everything in the chat, the raised title included: content
+     passes under the glass, never over it. */
+  z-index: 5;
   isolation: isolate;
   display: flex;
   align-items: center;

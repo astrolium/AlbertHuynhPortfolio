@@ -69,11 +69,31 @@ function Chapter({ item, index }) {
   );
 }
 
-/* Only the current role is shown. The past roles stay in data/index.json,
- * so they're easy to bring back. */
+/* Past roles as a quiet row of logos. */
+function Previously({ items }) {
+  const ref = useReveal({ distance: 12 });
+  return (
+    <div className="shell previously reveal" ref={ref}>
+      <p className="previously__label" id="previously-label">
+        Previously
+      </p>
+      <ul className="previously__logos" aria-labelledby="previously-label">
+        {items.map((item) => (
+          <li key={item.id}>
+            <Logo item={item} scale={44} />
+            <span className="sr-only">{item.company}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+/* The current role gets the chapter; past roles get the logo row. Their
+ * full details stay in data/index.json. */
 export default function Work() {
   const headRef = useReveal();
-  const [current] = data.portfolio;
+  const [current, ...past] = data.portfolio;
 
   return (
     <section className="work" id="work" aria-labelledby="work-title">
@@ -82,6 +102,7 @@ export default function Work() {
       </div>
 
       <Chapter item={current} index={0} />
+      <Previously items={past} />
     </section>
   );
 }
