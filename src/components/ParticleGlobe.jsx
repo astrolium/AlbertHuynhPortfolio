@@ -387,7 +387,7 @@ export default function ParticleGlobe() {
     <div className="globe-layer" ref={layerRef} aria-hidden="true">
       <canvas ref={canvasRef} className="globe" />
       <div className="globe-pane imsg" ref={paneRef}>
-        <LiquidGlass radius={0} bezel={140} scale={70} blur={4} />
+        <LiquidGlass radius={34} bezel={90} scale={110} blur={4} />
       </div>
     </div>
   );

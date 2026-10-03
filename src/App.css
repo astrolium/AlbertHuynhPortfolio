@@ -217,26 +217,59 @@ a {
   height: 100%;
 }
 
-/* A screen-sized pane of liquid glass over the globe. Its opacity is set
-   from scroll (ParticleGlobe.jsx): clear at the hero, frosted below it.
-   No rim or sheen at this size, just the frost, a whisper of the page
-   colour, and the bend at the screen's edges. */
+/* A pane of liquid glass over the globe, nearly the size of the screen.
+   Its opacity is set from scroll (ParticleGlobe.jsx): clear at the hero,
+   frosted below it. It's inset with rounded corners, like an iOS sheet,
+   because glass reads as glass at its edges: a bright rim, a sheen, and
+   the globe bending where it passes under them. Full-bleed, it was just
+   a blur. */
 .globe-pane {
   position: absolute;
-  inset: 0;
+  inset: 12px;
+  border-radius: 34px;
   opacity: 0;
 }
 
 .globe-pane > .glass {
-  border-radius: 0;
-  background: color-mix(in srgb, var(--bg) 12%, transparent);
-  box-shadow: none;
+  border-radius: inherit;
+  background:
+    linear-gradient(to bottom, var(--glass-rim) 0, transparent 1.5px),
+    linear-gradient(to top, var(--glass-rim-soft) 0, transparent 1.5px),
+    color-mix(in srgb, var(--bg) 18%, transparent);
+  box-shadow:
+    inset 0 0 0 1px var(--glass-rim-soft),
+    0 0 0 0.5px var(--glass-shade),
+    0 24px 70px var(--glass-shade);
   -webkit-backdrop-filter: blur(4px) saturate(1.4);
   backdrop-filter: blur(4px) saturate(1.4);
 }
 
+/* A slow diagonal sheen, faint enough to read as light on a surface. */
 .globe-pane > .glass::before {
-  display: none;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.28) 0%,
+    rgba(255, 255, 255, 0) 38%,
+    rgba(255, 255, 255, 0) 70%,
+    rgba(255, 255, 255, 0.12) 100%
+  );
+}
+
+:root[data-theme="dark"] .globe-pane > .glass::before {
+  opacity: 0.35;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .globe-pane > .glass::before {
+    opacity: 0.35;
+  }
+}
+
+@media (max-width: 700px) {
+  .globe-pane {
+    inset: 8px;
+    border-radius: 28px;
+  }
 }
 
 /* Present to a screen reader, absent to everyone else. */
