@@ -2002,6 +2002,72 @@ a {
   border-radius: 999px;
 }
 
+/* The header as glass: at the top of the page it's just the bar on the
+   canvas; once there's content to float over, it pulls in from the edges,
+   rounds off and turns to glass, and what scrolls under it bends at its rim.
+   This replaces the blurred strip (.nav::before). */
+.nav::before {
+  display: none;
+}
+
+.nav__bar {
+  margin-top: 0;
+  border-radius: 999px;
+  isolation: isolate;
+  transition: width 460ms cubic-bezier(0.32, 0.72, 0, 1),
+    height 460ms cubic-bezier(0.32, 0.72, 0, 1),
+    margin-top 460ms cubic-bezier(0.32, 0.72, 0, 1),
+    padding 460ms cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+.nav__bar > .glass {
+  opacity: 0;
+  transition: opacity 320ms var(--ease);
+}
+
+.nav__bar > :not(.glass) {
+  position: relative;
+  z-index: 1;
+}
+
+.nav.is-floating .nav__bar {
+  width: min(1100px, calc(100% - 24px));
+  height: 56px;
+  margin-top: 10px;
+  padding-inline: 22px 8px;
+}
+
+.nav.is-floating .nav__bar > .glass {
+  opacity: 1;
+}
+
+/* Glass on glass reads as mud: inside the capsule, the links and buttons
+   drop their own and sit straight on the header's. */
+.nav.is-floating .nav__links > .glass {
+  opacity: 0;
+}
+
+.nav.is-floating .icon-button--glass {
+  background: transparent;
+  box-shadow: none;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+
+.nav.is-floating .icon-button--glass:hover:not(:disabled) {
+  background: var(--fill);
+}
+
+.nav__links > .glass {
+  transition: opacity 320ms var(--ease);
+}
+
+/* The mobile menu drops from under the capsule, not from behind it. */
+.nav.is-floating .nav__sheet {
+  top: 74px;
+  right: calc(12px + 4px);
+}
+
 .icon-button--glass {
   background: var(--glass-tint);
   box-shadow: 0 0 0 0.5px var(--glass-shade), inset 0 1px 0 var(--glass-rim),

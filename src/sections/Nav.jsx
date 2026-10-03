@@ -186,6 +186,9 @@ export default function Nav() {
   return (
     <header className={`nav ${floating ? "is-floating" : ""}`}>
       <div className="nav__bar">
+        {/* Scrolled, the bar condenses into a floating capsule of the same
+            liquid glass as the chat composer. */}
+        <LiquidGlass bezel={18} scale={26} />
         <a
           className="nav__wordmark"
           href="#top"
