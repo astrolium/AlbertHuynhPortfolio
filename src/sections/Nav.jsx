@@ -19,6 +19,11 @@ const LINKS = [
 ];
 
 const SPY_IDS = ["top", ...LINKS.map((link) => link.id)];
+
+/* The scrolled capsule's spacing, in px. App.css uses the same numbers, and
+ * the capsule's width is computed from them: see the effect below. */
+const CAPSULE_GAP = 28;
+const CAPSULE_PAD = 20 + 6;
 const NAV_OFFSET = 84;
 
 const THEME_LABEL = {
@@ -42,12 +47,41 @@ export default function Nav() {
   const scrollTo = useScrollTo();
   const { theme, cycle } = useTheme();
 
+  const barRef = useRef(null);
   const listRef = useRef(null);
   const indicatorRef = useRef(null);
   const sheetRef = useRef(null);
   const toggleRef = useRef(null);
   const indicator = useRef(null);
   const sheet = useRef(null);
+
+  /* --- the capsule's width. It hugs its contents, but `fit-content` only
+     animates in Chromium (interpolate-size); Safari, and so every browser on
+     iOS, would snap. So measure the contents and hand CSS a real length,
+     which every engine can animate to. --- */
+  useLayoutEffect(() => {
+    const bar = barRef.current;
+    if (!bar) return undefined;
+    const items = [...bar.children].filter(
+      (el) => !el.classList.contains("glass") && el.tagName !== "svg"
+    );
+    const measure = () => {
+      const shown = items.filter((el) => el.offsetWidth > 0);
+      const width =
+        shown.reduce((sum, el) => sum + el.offsetWidth, 0) +
+        CAPSULE_GAP * Math.max(shown.length - 1, 0) +
+        CAPSULE_PAD;
+      bar.style.setProperty("--capsule-w", `${Math.ceil(width)}px`);
+    };
+    measure();
+    const observer = new ResizeObserver(measure);
+    items.forEach((el) => observer.observe(el));
+    window.addEventListener("resize", measure);
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("resize", measure);
+    };
+  }, []);
 
   /* --- the active pill. X and width get their own springs: a single spring
      on a 2D distance desyncs the moment the two axes disagree. --- */
@@ -185,7 +219,7 @@ export default function Nav() {
 
   return (
     <header className={`nav ${floating ? "is-floating" : ""}`}>
-      <div className="nav__bar">
+      <div className="nav__bar" ref={barRef}>
         {/* Scrolled, the bar condenses into a floating capsule of the same
             liquid glass as the chat composer. */}
         <LiquidGlass bezel={18} scale={26} />
