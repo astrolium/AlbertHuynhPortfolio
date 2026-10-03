@@ -1,5 +1,6 @@
 import { useScrollTo } from "../lib/motion";
 import Bubble from "../components/Bubble";
+import LiquidGlass from "../components/LiquidGlass";
 
 const NAV_OFFSET = 84;
 
@@ -28,14 +29,16 @@ export default function Hero() {
             Text me
           </a>
           <a
-            className="button button--quiet"
+            className="imsg button button--glass"
             href="#work"
             onClick={(event) => {
               event.preventDefault();
               scrollTo("work", NAV_OFFSET);
             }}
           >
-            See my work
+            {/* The same glass as the nav: the globe bends through it. */}
+            <LiquidGlass radius={8} bezel={10} scale={16} />
+            <span className="button__label">See my work</span>
           </a>
         </div>
       </div>

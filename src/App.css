@@ -400,6 +400,31 @@ a {
   background: var(--fill);
 }
 
+/* Secondary, as liquid glass (components/LiquidGlass.jsx) rather than a
+   hairline outline: it sits over the hero's globe, which bends through it. */
+.button--glass {
+  position: relative;
+  isolation: isolate;
+  color: var(--text);
+}
+
+.button--glass > .glass {
+  border-radius: inherit;
+  transition: background-color 200ms var(--ease);
+}
+
+.button--glass:hover > .glass {
+  background:
+    linear-gradient(to bottom, var(--glass-rim) 0, transparent 1.5px),
+    linear-gradient(to top, var(--glass-rim-soft) 0, transparent 1.5px),
+    var(--fill-strong);
+}
+
+.button__label {
+  position: relative;
+  z-index: 1;
+}
+
 .icon-button {
   display: inline-flex;
   align-items: center;
