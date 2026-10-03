@@ -6,7 +6,11 @@ import { useEffect, useRef } from "react";
  * that does all the motion, so a frame costs JavaScript a few uniforms.
  *
  * Colours come from CSS (--globe-* in App.css), so it follows the theme.
- * It fades out over the contact chat, and stops drawing while hidden. */
+ * It dims behind long reading (About), fades out over the contact chat, and
+ * stops drawing while hidden. */
+
+/* How strong the globe stays while text it would sit behind is on screen. */
+const DIM_BEHIND_TEXT = 0.25;
 
 const VERTEX = `
 attribute vec3 aOrigin;
@@ -245,6 +249,8 @@ export default function ParticleGlobe() {
     let last = performance.now();
     let frame = 0;
     let hidden = false;
+    let dim = 1;
+    let dimTarget = 1;
 
     const draw = () => {
       gl.uniform1f(u.uTime, time);
@@ -252,7 +258,7 @@ export default function ParticleGlobe() {
       gl.uniform2f(u.uRotation, yaw, 0.38 + Math.sin(time * 0.07) * 0.08);
       gl.uniform3fv(u.uDot, palette.dot);
       gl.uniform3fv(u.uAccent, palette.accent);
-      gl.uniform1f(u.uAlpha, palette.alpha);
+      gl.uniform1f(u.uAlpha, palette.alpha * dim);
       gl.uniform1f(u.uGlow, palette.glow);
       gl.clear(gl.COLOR_BUFFER_BIT);
       gl.drawArrays(gl.POINTS, 0, count);
@@ -272,6 +278,7 @@ export default function ParticleGlobe() {
       // Bursts apart quickly; reassembles at an unhurried pace.
       disperse = approach(disperse, goal, goal > disperse ? 7 : 2.2, dt);
       yaw += dt * (0.12 + disperse * 0.35);
+      dim = approach(dim, dimTarget, 3, dt);
 
       palette = {
         dot: palette.dot.map((v, i) => approach(v, target.dot[i], 4, dt)),
@@ -316,6 +323,25 @@ export default function ParticleGlobe() {
       visibility.observe(contact);
     }
 
+    /* --- quieter behind reading: while the About copy crosses the middle
+       of the screen, the globe drops back so the text stays legible. */
+    const about = document.getElementById("about");
+    let dimmer;
+    if (about && "IntersectionObserver" in window) {
+      dimmer = new IntersectionObserver(
+        ([entry]) => {
+          dimTarget = entry.isIntersecting ? DIM_BEHIND_TEXT : 1;
+          if (reduced) {
+            dim = dimTarget;
+            draw();
+          }
+        },
+        // The middle 40% of the screen.
+        { rootMargin: "-30% 0px -30% 0px" }
+      );
+      dimmer.observe(about);
+    }
+
     const onLost = (event) => {
       event.preventDefault();
       cancelAnimationFrame(frame);
@@ -342,6 +368,7 @@ export default function ParticleGlobe() {
       scheme.removeEventListener("change", onTheme);
       themeObserver.disconnect();
       if (visibility) visibility.disconnect();
+      if (dimmer) dimmer.disconnect();
       buffers.forEach((buffer) => gl.deleteBuffer(buffer));
       gl.deleteProgram(program);
     };
