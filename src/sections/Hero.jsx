@@ -12,7 +12,7 @@ export default function Hero() {
       <div className="hero__content">
         <p className="eyebrow">Hey, I’m Albert</p>
         <h1 className="hero__title">
-          Product manager, explorer and{" "}
+          Builder, explorer and{" "}
           <span className="hero__accent">creative</span>.
         </h1>
         <p className="hero__lede">Based anywhere. Usually one text away.</p>
