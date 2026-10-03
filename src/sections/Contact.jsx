@@ -95,10 +95,7 @@ function Reply({ send, failures }) {
   if (send.status === "delivered") {
     return (
       <>
-        <Bubble className="bubble--reply">got it 🙌</Bubble>
-        <Bubble tail className="bubble--reply bubble--later">
-          that went straight to my real inbox, not the void. talk soon
-        </Bubble>
+        <Bubble tail className="bubble--reply">got it, talk soon 🙌</Bubble>
       </>
     );
   }
