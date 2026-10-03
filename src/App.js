@@ -5,6 +5,7 @@ import About from "./sections/About";
 import Work from "./sections/Work";
 import Contact from "./sections/Contact";
 import Footer from "./sections/Footer";
+import ParticleGlobe from "./components/ParticleGlobe";
 
 export default function App() {
   return (
@@ -12,6 +13,7 @@ export default function App() {
       <a className="skip-link" href="#about">
         Skip to content
       </a>
+      <ParticleGlobe />
       <Nav />
       <main>
         <Hero />

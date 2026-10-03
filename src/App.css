@@ -32,6 +32,13 @@
   --on-accent: #ffffff;
   --tone: #cc785c;
 
+  /* The background globe (components/ParticleGlobe.jsx): RGB triples, so
+     WebGL can read them. Ink dots with a few coral ones on the light page. */
+  --globe-dot: 20 20 19;
+  --globe-accent: 204 120 92;
+  --globe-alpha: 0.42;
+  --globe-glow: 0;
+
   /* Shadows carry the ink's warmth rather than a neutral black. */
   --shadow-1: 0 1px 3px rgba(20, 20, 19, 0.08);
   --shadow-2: 0 1px 2px rgba(20, 20, 19, 0.05), 0 18px 48px rgba(61, 45, 30, 0.08);
@@ -75,6 +82,10 @@
     --accent-soft: rgba(224, 138, 107, 0.2);
     --on-accent: #141413;
     --tone: #e08a6b;
+    --globe-dot: 250 249 245;
+    --globe-accent: 224 138 107;
+    --globe-alpha: 0.55;
+    --globe-glow: 1;
 
     --shadow-1: 0 1px 3px rgba(0, 0, 0, 0.4);
     --shadow-2: 0 1px 2px rgba(0, 0, 0, 0.35), 0 18px 48px rgba(0, 0, 0, 0.4);
@@ -105,6 +116,10 @@
   --accent-soft: rgba(224, 138, 107, 0.2);
   --on-accent: #141413;
   --tone: #e08a6b;
+  --globe-dot: 250 249 245;
+  --globe-accent: 224 138 107;
+  --globe-alpha: 0.55;
+  --globe-glow: 1;
 
   --shadow-1: 0 1px 3px rgba(0, 0, 0, 0.4);
   --shadow-2: 0 1px 2px rgba(0, 0, 0, 0.35), 0 18px 48px rgba(0, 0, 0, 0.4);
@@ -172,6 +187,28 @@ a {
 .skip-link:focus-visible {
   transform: translate(-50%, 0);
 }
+/* The particle globe: fixed behind everything, above the page colour but
+   under all content. Sections with their own fill (work, footer) pass over
+   it. It fades in once drawn, and out again over the contact chat. */
+.globe {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 700ms var(--ease);
+}
+
+.globe.is-ready {
+  opacity: 1;
+}
+
+.globe.is-ready.is-hidden {
+  opacity: 0;
+}
+
 /* Present to a screen reader, absent to everyone else. */
 .sr-only {
   position: absolute;
@@ -644,6 +681,9 @@ a {
 .work {
   padding-block: clamp(4.5rem, 9vw, 7rem) clamp(3rem, 6vw, 5rem);
   background: var(--bg-tint);
+  /* Not quite opaque, so the background globe shows faintly through
+     instead of being cut off in a hard line at the section's edge. */
+  background: color-mix(in srgb, var(--bg-tint) 84%, transparent);
 }
 
 .work__head {
