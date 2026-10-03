@@ -1,10 +1,8 @@
 import data from "../data/index.json";
-import GRAPHICS from "../components/graphics";
 import Bubble from "../components/Bubble";
 import { useReveal } from "../lib/motion";
 
 function Chapter({ item, index }) {
-  const Graphic = GRAPHICS[item.graphic];
   const copyRef = useReveal({ distance: 22 });
   const headingId = `work-${item.id}-name`;
   const logoHeight = 62 / Math.sqrt(item.ratio);
@@ -46,30 +44,18 @@ function Chapter({ item, index }) {
           </ul>
         </div>
 
-        <div className="chapter__stage">
-          <span className="chapter__aura" aria-hidden="true" />
-          <figure className="stage">
-            <figcaption className="stage__chrome">{item.stageLabel}</figcaption>
-            <div className="stage__screen">
-              {item.image ? (
-                <img
-                  className="stage__shot"
-                  src={item.image}
-                  alt={item.imageAlt || `${item.company} product interface`}
-                  loading="lazy"
-                />
-              ) : (
-                <Graphic />
-              )}
-            </div>
-          </figure>
-          {item.aside && (
-            <div className="imsg chapter__aside">
-              <Bubble reaction={item.aside.reaction}>
-                {item.aside.text}
-              </Bubble>
-            </div>
-          )}
+        {/* No figure: the visitor asks, Albert answers. The serious version
+            is on the other side; this is the version Albert would text you. */}
+        <div className="imsg chapter__chat">
+          <p className="chat__stamp">
+            <strong>{item.company}</strong> {item.period}
+          </p>
+          <Bubble sent tail className="chapter__ask">
+            {item.ask}
+          </Bubble>
+          <Bubble tail reaction={item.aside.reaction} className="chapter__answer">
+            {item.aside.text}
+          </Bubble>
         </div>
       </div>
     </section>

@@ -807,6 +807,69 @@ a {
   font-weight: 500;
 }
 
+/* --- the chat: in place of a figure, a two-line exchange. The visitor
+       asks; Albert answers in text-speak. --- */
+
+.chapter__chat {
+  /* Tails and tapback rings are cut out with --bg; this section's page is
+     the tint, so the cut-outs have to be too. */
+  --bg: var(--bg-tint);
+  display: flex;
+  flex-direction: column;
+  width: min(100%, 400px);
+  justify-self: center;
+}
+
+.chapter__chat .chat__stamp {
+  margin: 0 0 1.25rem;
+}
+
+.chapter__chat .bubble {
+  max-width: 86%;
+}
+
+.chapter__chat .bubble--sent {
+  margin-bottom: 12px;
+}
+
+.chapter__chat .bubble--reacted {
+  margin-top: 22px;
+}
+
+.chapter[data-side="right"] .chapter__chat {
+  order: 1;
+}
+
+.chapter[data-layout="stack"] .chapter__chat {
+  order: 1;
+  margin-right: clamp(0rem, 6vw, 5rem);
+  justify-self: end;
+}
+
+/* Question first, answer a beat later, both tied to the scroll. Longhands,
+   so the minifier can't reorder a shorthand over the timeline. */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .chapter__ask,
+    .chapter__answer {
+      animation-name: bubble-arrive;
+      animation-timing-function: linear;
+      animation-fill-mode: both;
+      animation-timeline: view();
+    }
+
+    .chapter__ask {
+      animation-range: entry 20% entry 70%;
+      transform-origin: right bottom;
+    }
+
+    .chapter__answer {
+      animation-range: entry 55% cover 30%;
+      transform-origin: left bottom;
+    }
+  }
+}
+
 /* --- the stage: a flat frame on the page, lifting into place --- */
 
 .chapter__stage {
@@ -1261,6 +1324,13 @@ a {
 
   .chapter[data-side="right"] .chapter__stage {
     order: 0;
+  }
+
+  .chapter[data-side="right"] .chapter__chat,
+  .chapter[data-layout="stack"] .chapter__chat {
+    order: 0;
+    margin-right: 0;
+    justify-self: start;
   }
 
   .chapter__headline,
