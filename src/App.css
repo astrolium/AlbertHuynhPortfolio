@@ -870,6 +870,103 @@ a {
   }
 }
 
+/* --- draft ?work=chat: no paragraph or tags; the headline goes poster
+       size and the exchange carries the details --- */
+
+.chapter--lean .chapter__headline {
+  max-width: 17ch;
+  font-size: clamp(2.25rem, 1.4rem + 2.8vw, 3.5rem);
+  line-height: 1.04;
+}
+
+.chapter--lean .chapter__copy {
+  gap: 1rem;
+}
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .chapter__answer--later {
+      animation-range: entry 80% cover 40%;
+    }
+  }
+}
+
+/* --- draft ?work=rhythm: the current role in full, then the past as rows
+       you can take in at a glance --- */
+
+.past {
+  margin-top: clamp(1rem, 3vw, 2.5rem);
+}
+
+.past__label {
+  margin-bottom: 1rem;
+}
+
+.past__row {
+  display: grid;
+  grid-template-columns: minmax(9rem, 0.7fr) minmax(0, 1.3fr) minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(1.25rem, 3vw, 2.5rem);
+  padding-block: clamp(1.5rem, 3vw, 2.25rem);
+  border-top: 1px solid var(--hairline);
+}
+
+.past__row:last-child {
+  border-bottom: 1px solid var(--hairline);
+}
+
+.past__meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.past__headline {
+  max-width: 20ch;
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 1.15rem + 1.1vw, 2rem);
+  font-weight: 500;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+}
+
+.past__chat {
+  --bg: var(--bg-tint);
+  display: flex;
+  justify-content: flex-end;
+}
+
+.past__chat .bubble {
+  max-width: 100%;
+  margin: 18px 0 0;
+}
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .past__chat .bubble {
+      animation-name: bubble-arrive;
+      animation-timing-function: linear;
+      animation-fill-mode: both;
+      animation-timeline: view();
+      animation-range: entry 40% entry 100%;
+      transform-origin: left bottom;
+    }
+  }
+}
+
+@media (max-width: 860px) {
+  .past__row {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1rem;
+  }
+
+  .past__chat {
+    justify-content: flex-start;
+    padding-left: 8px;
+  }
+}
+
 /* --- the stage: a flat frame on the page, lifting into place --- */
 
 .chapter__stage {
