@@ -27,8 +27,9 @@
      Palette: cream #fefae0, forest #283618, olive #606c38, caramel #dda15e.
      Olive carries the accents with text on them (cream on olive is 5.4:1).
      Caramel is only 2.1:1 on cream, so in light it goes on things without
-     text: the globe's highlight dots, pill dots, tags, selection. In dark
-     it becomes the accent (6.7:1 on the forest page). */
+     text: the globe's highlight dots, pill dots, tags, selection. Dark mode
+     keeps its original near-black surfaces, with caramel as the accent
+     (8.0:1 on the page). */
   --accent: #606c38;
   --accent-press: #4e5a2c;
   --accent-soft: rgba(221, 161, 94, 0.3);
@@ -65,27 +66,27 @@
   :root:not([data-theme="light"]) {
     color-scheme: dark;
 
-    --bg: #1f2a13;
-    --bg-tint: #263319;
-    --surface: #2c3a1e;
-    --surface-2: #364628;
-    --chrome: rgba(31, 42, 19, 0.74);
-    --chrome-strong: rgba(44, 58, 30, 0.94);
-    --chrome-edge: rgba(254, 250, 224, 0.1);
+    --bg: #181715;
+    --bg-tint: #1f1e1b;
+    --surface: #252320;
+    --surface-2: #2d2b27;
+    --chrome: rgba(24, 23, 21, 0.74);
+    --chrome-strong: rgba(37, 35, 32, 0.94);
+    --chrome-edge: rgba(250, 249, 245, 0.1);
 
-    --text: #fefae0;
-    --text-2: #e3dfc2;
-    --text-3: #bdb99a;
-    --hairline: rgba(254, 250, 224, 0.12);
-    --fill: rgba(254, 250, 224, 0.07);
-    --fill-strong: rgba(254, 250, 224, 0.13);
+    --text: #faf9f5;
+    --text-2: #c2bfb6;
+    --text-3: #a09d96;
+    --hairline: rgba(250, 249, 245, 0.11);
+    --fill: rgba(250, 249, 245, 0.07);
+    --fill-strong: rgba(250, 249, 245, 0.13);
 
     --accent: #dda15e;
     --accent-press: #e6b47a;
     --accent-soft: rgba(221, 161, 94, 0.25);
-    --on-accent: #1f2a13;
+    --on-accent: #181715;
     --tone: #dda15e;
-    --globe-dot: 254 250 224;
+    --globe-dot: 250 249 245;
     --globe-accent: 221 161 94;
     --globe-alpha: 0.55;
     --globe-glow: 1;
@@ -99,27 +100,27 @@
 :root[data-theme="dark"] {
   color-scheme: dark;
 
-  --bg: #1f2a13;
-  --bg-tint: #263319;
-  --surface: #2c3a1e;
-  --surface-2: #364628;
-  --chrome: rgba(31, 42, 19, 0.74);
-  --chrome-strong: rgba(44, 58, 30, 0.94);
-  --chrome-edge: rgba(254, 250, 224, 0.1);
+  --bg: #181715;
+  --bg-tint: #1f1e1b;
+  --surface: #252320;
+  --surface-2: #2d2b27;
+  --chrome: rgba(24, 23, 21, 0.74);
+  --chrome-strong: rgba(37, 35, 32, 0.94);
+  --chrome-edge: rgba(250, 249, 245, 0.1);
 
-  --text: #fefae0;
-  --text-2: #e3dfc2;
-  --text-3: #bdb99a;
-  --hairline: rgba(254, 250, 224, 0.12);
-  --fill: rgba(254, 250, 224, 0.07);
-  --fill-strong: rgba(254, 250, 224, 0.13);
+  --text: #faf9f5;
+  --text-2: #c2bfb6;
+  --text-3: #a09d96;
+  --hairline: rgba(250, 249, 245, 0.11);
+  --fill: rgba(250, 249, 245, 0.07);
+  --fill-strong: rgba(250, 249, 245, 0.13);
 
   --accent: #dda15e;
   --accent-press: #e6b47a;
   --accent-soft: rgba(221, 161, 94, 0.25);
-  --on-accent: #1f2a13;
+  --on-accent: #181715;
   --tone: #dda15e;
-  --globe-dot: 254 250 224;
+  --globe-dot: 250 249 245;
   --globe-accent: 221 161 94;
   --globe-alpha: 0.55;
   --globe-glow: 1;
@@ -427,8 +428,8 @@ a {
 
 /* The primary action as tinted glass: the accent's deeper shade at 85%, so
    the glass still shows through but the label holds 4.5:1 or better even
-   with the page itself behind it (cream on olive 4.9:1; forest on caramel
-   6.2:1 in dark). */
+   with the page itself behind it (cream on olive 4.9:1; near-black on caramel
+   7.2:1 in dark). */
 .button--glass-tinted {
   color: var(--on-accent);
 }
@@ -1596,11 +1597,11 @@ a {
 
 :root[data-theme="dark"] .imsg,
 :root[data-theme="dark"] .nav {
-  --received: #34432a;
+  --received: #2e2b27;
   --link: var(--accent);
-  --sent-disabled: rgba(254, 250, 224, 0.2);
-  --stamp: #a9ad8c;
-  --glass-tint: rgba(31, 42, 19, 0.4);
+  --sent-disabled: rgba(250, 249, 245, 0.2);
+  --stamp: #8e8c86;
+  --glass-tint: rgba(37, 35, 32, 0.4);
   --glass-rim: rgba(255, 255, 255, 0.28);
   --glass-rim-soft: rgba(255, 255, 255, 0.06);
   --glass-shade: rgba(0, 0, 0, 0.35);
@@ -1609,11 +1610,11 @@ a {
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) .imsg,
   :root:not([data-theme="light"]) .nav {
-    --received: #34432a;
+    --received: #2e2b27;
     --link: var(--accent);
-    --sent-disabled: rgba(254, 250, 224, 0.2);
-    --stamp: #a9ad8c;
-    --glass-tint: rgba(31, 42, 19, 0.4);
+    --sent-disabled: rgba(250, 249, 245, 0.2);
+    --stamp: #8e8c86;
+    --glass-tint: rgba(37, 35, 32, 0.4);
     --glass-rim: rgba(255, 255, 255, 0.28);
     --glass-rim-soft: rgba(255, 255, 255, 0.06);
     --glass-shade: rgba(0, 0, 0, 0.35);
