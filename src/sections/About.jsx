@@ -1,4 +1,5 @@
 import { useReveal } from "../lib/motion";
+import SectionPill from "../components/SectionPill";
 
 export default function About() {
   const headRef = useReveal();
@@ -8,7 +9,7 @@ export default function About() {
     <section className="section" id="about">
       <div className="shell about">
         <div className="reveal about__head" ref={headRef}>
-          <h2 className="section__title">How I got here</h2>
+          <SectionPill>How I got here</SectionPill>
         </div>
 
         <div className="reveal about__copy" ref={copyRef}>

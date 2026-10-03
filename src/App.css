@@ -201,6 +201,40 @@ a {
   line-height: 1.2;
 }
 
+/* A section's name as a small glass pill (components/SectionPill.jsx).
+   Quieter than a display title, so the content under it leads. */
+.section-pill {
+  position: relative;
+  isolation: isolate;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  width: fit-content;
+  padding: 0.5rem 1rem 0.5rem 0.85rem;
+  border-radius: 999px;
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+/* A coral dot, so the pill reads as a label rather than a button. */
+.section-pill::before {
+  content: "";
+  position: relative;
+  z-index: 1;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.section-pill__text {
+  position: relative;
+  z-index: 1;
+}
+
 /* Display type is the serif at 500, never bold: weight isn't where the
    hierarchy comes from, size is. */
 .section__title {
@@ -870,29 +904,8 @@ a {
   }
 }
 
-/* --- draft ?work=chat: no paragraph or tags; the headline goes poster
-       size and the exchange carries the details --- */
-
-.chapter--lean .chapter__headline {
-  max-width: 17ch;
-  font-size: clamp(2.25rem, 1.4rem + 2.8vw, 3.5rem);
-  line-height: 1.04;
-}
-
-.chapter--lean .chapter__copy {
-  gap: 1rem;
-}
-
-@supports (animation-timeline: view()) {
-  @media (prefers-reduced-motion: no-preference) {
-    .chapter__answer--later {
-      animation-range: entry 80% cover 40%;
-    }
-  }
-}
-
-/* --- draft ?work=rhythm: the current role in full, then the past as rows
-       you can take in at a glance --- */
+/* --- past roles: the current role gets a chapter; these are rows you
+       can take in at a glance --- */
 
 .past {
   margin-top: clamp(1rem, 3vw, 2.5rem);
