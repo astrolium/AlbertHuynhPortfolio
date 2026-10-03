@@ -69,67 +69,19 @@ function Chapter({ item, index }) {
   );
 }
 
-/* The current role gets a full chapter; past roles follow as rows. */
-
-/* One past role as a single scannable row: who, when, the headline, and
- * the joke off to the side. */
-function PastRow({ item }) {
-  const ref = useReveal({ distance: 16 });
-  return (
-    <li className="past__row reveal" ref={ref}>
-      <div className="past__meta">
-        <h3 className="chapter__name">
-          <Logo item={item} scale={50} />
-          <span className="sr-only">{item.company}</span>
-        </h3>
-        <p className="chapter__role">
-          {[item.role, item.period].filter(Boolean).join(" · ")}
-        </p>
-      </div>
-      <p className="past__headline">{item.headline}</p>
-      <div className="imsg past__chat">
-        <Bubble tail reaction={item.aside.reaction}>
-          {item.aside.text}
-        </Bubble>
-      </div>
-    </li>
-  );
-}
-
-function Rhythm() {
-  const [current, ...past] = data.portfolio;
-  const labelRef = useReveal();
-  return (
-    <>
-      <Chapter item={current} index={0} />
-      <div className="shell past">
-        <p className="eyebrow past__label reveal" ref={labelRef}>
-          Before that
-        </p>
-        <ul className="past__list">
-          {past.map((item) => (
-            <PastRow key={item.id} item={item} />
-          ))}
-        </ul>
-      </div>
-    </>
-  );
-}
-
+/* Only the current role is shown. The past roles stay in data/index.json,
+ * so they're easy to bring back. */
 export default function Work() {
   const headRef = useReveal();
+  const [current] = data.portfolio;
 
   return (
     <section className="work" id="work" aria-labelledby="work-title">
       <div className="shell work__head reveal" ref={headRef}>
-        <SectionPill id="work-title">Where I’ve worked</SectionPill>
-        <p className="work__lede">
-          Four teams, four different problems: private markets, legal software,
-          the warehouse floor, and a camera hunting defects on a production line.
-        </p>
+        <SectionPill id="work-title">Currently at</SectionPill>
       </div>
 
-      <Rhythm />
+      <Chapter item={current} index={0} />
     </section>
   );
 }
