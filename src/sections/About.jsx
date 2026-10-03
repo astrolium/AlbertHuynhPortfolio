@@ -1,6 +1,5 @@
 import { useReveal } from "../lib/motion";
 import SectionPill from "../components/SectionPill";
-import LiquidGlass from "../components/LiquidGlass";
 
 export default function About() {
   const headRef = useReveal();
@@ -13,10 +12,7 @@ export default function About() {
           <SectionPill>How I got here</SectionPill>
         </div>
 
-        {/* The copy sits on a pane of liquid glass: the globe behind it
-            bends and softens through, and the text gets a calm surface. */}
-        <div className="reveal imsg about__copy about__panel" ref={copyRef}>
-          <LiquidGlass radius={28} bezel={26} scale={34} blur={5} />
+        <div className="reveal about__copy" ref={copyRef}>
           <p className="prose">
             I’ve always been someone who likes to build and create things.
             Growing up, it was always “let’s build Legos,” or “let’s make a

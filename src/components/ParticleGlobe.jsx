@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import LiquidGlass from "./LiquidGlass";
 
 /* A dotted globe behind the page. It turns slowly; scrolling blows it apart
  * into drifting particles, and it pulls itself back together once scrolling
@@ -6,13 +7,15 @@ import { useEffect, useRef } from "react";
  * that does all the motion, so a frame costs JavaScript a few uniforms.
  *
  * Colours come from CSS (--globe-* in App.css), so it follows the theme.
- * It dims behind long reading (About), fades out over the contact chat, and
- * stops drawing while hidden. */
+ * It fades out over the contact chat, and stops drawing while hidden.
+ *
+ * Over it lies a pane of liquid glass, absent at the hero and frosting in as
+ * the page scrolls into its content, so the globe is seen through glass
+ * everywhere but the opening screen. */
 
-/* How strong the globe stays while text it would sit behind is on screen. */
-// The About copy is on glass, which does most of the quieting; this only
-// takes the edge off, so the globe still shows through the pane.
-const DIM_BEHIND_TEXT = 0.6;
+/* Glass strength from scroll: none until a quarter of a screen down, full
+   by three quarters, which is about where the first section's text lands. */
+const glassAt = (y, vh) => Math.min(Math.max((y - 0.25 * vh) / (0.5 * vh), 0), 1);
 
 const VERTEX = `
 attribute vec3 aOrigin;
@@ -152,11 +155,23 @@ function readPalette() {
 const approach = (from, to, rate, dt) => from + (to - from) * (1 - Math.exp(-rate * dt));
 
 export default function ParticleGlobe() {
+  const layerRef = useRef(null);
   const canvasRef = useRef(null);
+  const paneRef = useRef(null);
 
   useEffect(() => {
+    const layer = layerRef.current;
     const canvas = canvasRef.current;
-    if (!canvas) return undefined;
+    const pane = paneRef.current;
+    if (!layer || !canvas || !pane) return undefined;
+
+    let glass = -1;
+    const setGlass = (value) => {
+      const rounded = Math.round(value * 100) / 100;
+      if (rounded === glass) return;
+      glass = rounded;
+      pane.style.opacity = String(rounded);
+    };
 
     const gl = canvas.getContext("webgl", {
       alpha: true,
@@ -251,8 +266,6 @@ export default function ParticleGlobe() {
     let last = performance.now();
     let frame = 0;
     let hidden = false;
-    let dim = 1;
-    let dimTarget = 1;
 
     const draw = () => {
       gl.uniform1f(u.uTime, time);
@@ -260,7 +273,7 @@ export default function ParticleGlobe() {
       gl.uniform2f(u.uRotation, yaw, 0.38 + Math.sin(time * 0.07) * 0.08);
       gl.uniform3fv(u.uDot, palette.dot);
       gl.uniform3fv(u.uAccent, palette.accent);
-      gl.uniform1f(u.uAlpha, palette.alpha * dim);
+      gl.uniform1f(u.uAlpha, palette.alpha);
       gl.uniform1f(u.uGlow, palette.glow);
       gl.clear(gl.COLOR_BUFFER_BIT);
       gl.drawArrays(gl.POINTS, 0, count);
@@ -280,7 +293,7 @@ export default function ParticleGlobe() {
       // Bursts apart quickly; reassembles at an unhurried pace.
       disperse = approach(disperse, goal, goal > disperse ? 7 : 2.2, dt);
       yaw += dt * (0.12 + disperse * 0.35);
-      dim = approach(dim, dimTarget, 3, dt);
+      setGlass(glassAt(y, window.innerHeight));
 
       palette = {
         dot: palette.dot.map((v, i) => approach(v, target.dot[i], 4, dt)),
@@ -308,11 +321,11 @@ export default function ParticleGlobe() {
       visibility = new IntersectionObserver(
         ([entry]) => {
           const atChat = entry.isIntersecting || entry.boundingClientRect.top < 0;
-          canvas.classList.toggle("is-hidden", atChat);
+          layer.classList.toggle("is-hidden", atChat);
           if (atChat) {
             // Let the fade finish on screen before the loop stops.
             setTimeout(() => {
-              if (canvas.classList.contains("is-hidden")) hidden = true;
+              if (layer.classList.contains("is-hidden")) hidden = true;
             }, 700);
           } else {
             hidden = false;
@@ -325,23 +338,16 @@ export default function ParticleGlobe() {
       visibility.observe(contact);
     }
 
-    /* --- quieter behind reading: while the About copy crosses the middle
-       of the screen, the globe drops back so the text stays legible. */
-    const about = document.getElementById("about");
-    let dimmer;
-    if (about && "IntersectionObserver" in window) {
-      dimmer = new IntersectionObserver(
-        ([entry]) => {
-          dimTarget = entry.isIntersecting ? DIM_BEHIND_TEXT : 1;
-          if (reduced) {
-            dim = dimTarget;
-            draw();
-          }
-        },
-        // The middle 40% of the screen.
-        { rootMargin: "-30% 0px -30% 0px" }
+    /* Under reduced motion there's no frame loop to read scroll from, so the
+       glass follows how much of the hero is still on screen instead. */
+    const hero = document.getElementById("top");
+    let heroWatch;
+    if (reduced && hero && "IntersectionObserver" in window) {
+      heroWatch = new IntersectionObserver(
+        ([entry]) => setGlass(1 - entry.intersectionRatio),
+        { threshold: Array.from({ length: 21 }, (_, i) => i / 20) }
       );
-      dimmer.observe(about);
+      heroWatch.observe(hero);
     }
 
     const onLost = (event) => {
@@ -360,7 +366,8 @@ export default function ParticleGlobe() {
 
     resize();
     draw();
-    canvas.classList.add("is-ready");
+    setGlass(glassAt(window.scrollY, window.innerHeight));
+    layer.classList.add("is-ready");
     wake();
 
     return () => {
@@ -370,11 +377,18 @@ export default function ParticleGlobe() {
       scheme.removeEventListener("change", onTheme);
       themeObserver.disconnect();
       if (visibility) visibility.disconnect();
-      if (dimmer) dimmer.disconnect();
+      if (heroWatch) heroWatch.disconnect();
       buffers.forEach((buffer) => gl.deleteBuffer(buffer));
       gl.deleteProgram(program);
     };
   }, []);
 
-  return <canvas ref={canvasRef} className="globe" aria-hidden="true" />;
+  return (
+    <div className="globe-layer" ref={layerRef} aria-hidden="true">
+      <canvas ref={canvasRef} className="globe" />
+      <div className="globe-pane imsg" ref={paneRef}>
+        <LiquidGlass radius={0} bezel={140} scale={70} blur={4} />
+      </div>
+    </div>
+  );
 }

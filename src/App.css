@@ -187,26 +187,56 @@ a {
 .skip-link:focus-visible {
   transform: translate(-50%, 0);
 }
-/* The particle globe: fixed behind everything, above the page colour but
-   under all content. Sections with their own fill (work, footer) pass over
-   it. It fades in once drawn, and out again over the contact chat. */
-.globe {
+/* The particle globe and its glass: one fixed layer behind everything,
+   above the page colour but under all content. Sections with their own
+   fill (work, footer) pass over it. The layer fades in once drawn, and out
+   again over the contact chat, where it also stops costing anything. */
+.globe-layer {
   position: fixed;
   inset: 0;
   z-index: -1;
-  width: 100%;
-  height: 100%;
   pointer-events: none;
   opacity: 0;
-  transition: opacity 700ms var(--ease);
+  transition: opacity 700ms var(--ease), visibility 0s;
 }
 
-.globe.is-ready {
+.globe-layer.is-ready {
   opacity: 1;
 }
 
-.globe.is-ready.is-hidden {
+.globe-layer.is-ready.is-hidden {
   opacity: 0;
+  visibility: hidden;
+  transition: opacity 700ms var(--ease), visibility 0s linear 700ms;
+}
+
+.globe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* A screen-sized pane of liquid glass over the globe. Its opacity is set
+   from scroll (ParticleGlobe.jsx): clear at the hero, frosted below it.
+   No rim or sheen at this size, just the frost, a whisper of the page
+   colour, and the bend at the screen's edges. */
+.globe-pane {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+}
+
+.globe-pane > .glass {
+  border-radius: 0;
+  background: color-mix(in srgb, var(--bg) 12%, transparent);
+  box-shadow: none;
+  -webkit-backdrop-filter: blur(4px) saturate(1.4);
+  backdrop-filter: blur(4px) saturate(1.4);
+}
+
+.globe-pane > .glass::before {
+  display: none;
 }
 
 /* Present to a screen reader, absent to everyone else. */
@@ -1520,45 +1550,6 @@ a {
      the column, so the two halves still balance. */
   max-width: 58ch;
   padding-top: 0.4rem;
-}
-
-/* The glass pane behind the About copy. Its tint is heavier than the
-   chrome's, since text sits on it rather than a few controls. */
-.about__panel {
-  position: relative;
-  isolation: isolate;
-  max-width: calc(58ch + 2 * clamp(1.25rem, 3vw, 2.25rem));
-  padding: clamp(1.25rem, 3vw, 2.25rem);
-  border-radius: 28px;
-}
-
-.about__panel > .glass {
-  --glass-tint: rgba(250, 249, 245, 0.62);
-}
-
-:root[data-theme="dark"] .about__panel > .glass {
-  --glass-tint: rgba(30, 29, 26, 0.45);
-}
-
-/* The sheen that reads as a highlight on a small pill turns into a grey
-   band across a pane this size in dark; keep just a hint of it. */
-:root[data-theme="dark"] .about__panel > .glass::before {
-  opacity: 0.25;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) .about__panel > .glass {
-    --glass-tint: rgba(30, 29, 26, 0.45);
-  }
-
-  :root:not([data-theme="light"]) .about__panel > .glass::before {
-    opacity: 0.25;
-  }
-}
-
-.about__panel > :not(.glass):not(svg) {
-  position: relative;
-  z-index: 1;
 }
 
 @media (max-width: 860px) {
