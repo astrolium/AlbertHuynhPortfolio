@@ -230,31 +230,35 @@ a {
   background: var(--bg);
 }
 
-/* The curtain's leading edge is frosted glass, not a hard line: across
-   About's (empty) top padding the fill ramps in from clear while a blur
-   ramps up, so the globe carries on into it, softening and fading rather
-   than being cut off. It's the scroll edge effect from iOS. */
+/* The curtain's leading edge is frosted glass, not a hard line. The band
+   starts up in the hero's (empty) bottom padding and runs through About's
+   (empty) top padding: over it the page colour ramps in from clear while a
+   blur rises and falls, so the globe carries on into it, softening and
+   fading rather than being cut off. It's the scroll edge effect from iOS.
+   --lead matches the hero's bottom padding and --curtain About's top
+   padding, so the band never sits over any text. */
 #about {
-  --curtain: clamp(4.5rem, 9vw, 8rem);
-  background: linear-gradient(
-    to bottom,
-    transparent,
-    var(--bg) calc(var(--curtain) * 0.75)
-  );
+  --lead: clamp(3rem, 6vw, 5rem);
+  --curtain: clamp(6rem, 12vw, 10rem);
+  padding-top: var(--curtain);
+  background: linear-gradient(to bottom, transparent var(--curtain), var(--bg) var(--curtain));
 }
 
 #about::before {
   content: "";
   position: absolute;
-  inset: 0 0 auto;
-  height: var(--curtain);
+  top: calc(-1 * var(--lead));
+  left: 0;
+  right: 0;
+  height: calc(var(--lead) + var(--curtain));
   pointer-events: none;
+  background: linear-gradient(to bottom, transparent, var(--bg) 80%);
   -webkit-backdrop-filter: blur(12px) saturate(1.3);
   backdrop-filter: blur(12px) saturate(1.3);
   /* The frost peaks mid-band and fades out again before the band ends, so
      the blur never meets the solid fill in a line. */
-  -webkit-mask-image: linear-gradient(to bottom, transparent, #000 35%, #000 55%, transparent);
-  mask-image: linear-gradient(to bottom, transparent, #000 35%, #000 55%, transparent);
+  -webkit-mask-image: linear-gradient(to bottom, transparent, #000 35%, #000 60%, transparent);
+  mask-image: linear-gradient(to bottom, transparent, #000 35%, #000 60%, transparent);
 }
 
 #about > .shell {
