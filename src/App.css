@@ -565,7 +565,9 @@ a {
 @supports (animation-timeline: scroll()) {
   @media (prefers-reduced-motion: no-preference) {
     .hero__image {
-      animation: hero-drift linear both;
+      animation-name: hero-drift;
+      animation-timing-function: linear;
+      animation-fill-mode: both;
       animation-timeline: scroll(root);
       animation-range: 0 100vh;
     }
@@ -666,7 +668,9 @@ a {
 @supports (animation-timeline: view()) {
   @media (prefers-reduced-motion: no-preference) {
     .chapter {
-      animation: chapter-progress linear both;
+      animation-name: chapter-progress;
+      animation-timing-function: linear;
+      animation-fill-mode: both;
       animation-timeline: view();
       animation-range: cover calc(50% - 52vh) cover calc(50% + 4vh);
 
@@ -1800,14 +1804,21 @@ a {
        rule is specific enough to silently replace it. */
     .chat__thread > .bubble:not(.bubble--arrive, .bubble--reply),
     .chat__thread > .chat__stamp {
-      animation: edge-dissolve linear both;
+      /* Longhands only: the minifier moves an `animation` shorthand after
+         animation-timeline, and the shorthand resets the timeline to time,
+         which runs this instantly to its last, invisible frame. */
+      animation-name: edge-dissolve;
+      animation-timing-function: linear;
+      animation-fill-mode: both;
       animation-timeline: view();
       animation-range: cover;
     }
   }
 
   .bubble__reaction {
-    animation: reaction-pop 600ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
+    animation-name: reaction-pop;
+    animation-timing-function: cubic-bezier(0.34, 1.56, 0.64, 1);
+    animation-fill-mode: both;
     animation-timeline: view();
     animation-range: entry 40% entry 100%;
   }
@@ -2156,7 +2167,9 @@ a {
 
   @supports (animation-timeline: view()) {
     .chapter__aside .bubble {
-      animation: bubble-arrive linear both;
+      animation-name: bubble-arrive;
+      animation-timing-function: linear;
+      animation-fill-mode: both;
       animation-timeline: view();
       animation-range: entry 20% entry 80%;
     }
