@@ -2394,11 +2394,42 @@ a {
   z-index: 2;
 }
 
+/* The shadow sits on the wrapper as a drop-shadow, so it follows the
+   bubble's outline, tail included, instead of just its box. */
+.hero__note {
+  filter: drop-shadow(0 1px 2px rgba(40, 54, 24, 0.06)) drop-shadow(0 14px 28px rgba(40, 54, 24, 0.12));
+}
+
+:root[data-theme="dark"] .hero__note {
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.35)) drop-shadow(0 14px 28px rgba(0, 0, 0, 0.45));
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .hero__note {
+    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.35)) drop-shadow(0 14px 28px rgba(0, 0, 0, 0.45));
+  }
+}
+
 .hero__note .bubble {
   display: block;
   max-width: 15rem;
-  box-shadow: var(--shadow-2);
+  box-shadow: none;
   transition: transform 420ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* The tail as its own shape, filled with the bubble's colour. The chat's
+   tails are carved out with the page colour, which can't work over a photo
+   and the globe; this one needs nothing behind it. */
+.hero__bubble::before {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: -6px;
+  width: 20px;
+  height: 20px;
+  background: var(--received);
+  -webkit-mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'><path d='M6 0H20V20H6C3.5 20 1.5 19.6 0 19C2.5 17.5 6 15 6 9Z'/></svg>") no-repeat center / contain;
+  mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'><path d='M6 0H20V20H6C3.5 20 1.5 19.6 0 19C2.5 17.5 6 15 6 9Z'/></svg>") no-repeat center / contain;
 }
 
 .hero__note .bubble:hover {
