@@ -59,7 +59,6 @@ export default function Hero() {
           <Bubble
             as="a"
             href="#contact"
-            tail
             className="hero__bubble"
             onClick={(event) => {
               event.preventDefault();

@@ -2401,12 +2401,6 @@ a {
   transition: transform 420ms cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-/* The tail carves itself out of the page colour, which would leave a cream
-   notch on the photo; here the bubble floats, so it goes without. */
-.hero__note .bubble--tail::after {
-  display: none;
-}
-
 .hero__note .bubble:hover {
   transform: translateY(-3px) scale(1.03);
   text-decoration: none;
