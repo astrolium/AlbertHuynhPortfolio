@@ -3,6 +3,7 @@ import Nav from "./sections/Nav";
 import Hero from "./sections/Hero";
 import About from "./sections/About";
 import Work from "./sections/Work";
+import Projects from "./sections/Projects";
 import Contact from "./sections/Contact";
 import Footer from "./sections/Footer";
 import ParticleGlobe from "./components/ParticleGlobe";
@@ -19,6 +20,7 @@ export default function App() {
         <Hero />
         <About />
         <Work />
+        <Projects />
         <Contact />
       </main>
       <Footer />

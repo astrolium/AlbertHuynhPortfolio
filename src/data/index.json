@@ -79,6 +79,92 @@
       "stageLabel": "Quality inspection"
     }
   ],
+  "projects": [
+    {
+      "id": "ai-tenant-texting-assistant",
+      "title": "AI Tenant Texting Assistant",
+      "period": "October 2026",
+      "type": "Side project / client work",
+      "status": "Live in draft mode (landlord reviews replies before sending)",
+      "summary": "An iPhone automation that reads a tenant's text, checks it against the lease, and drafts a reply in the landlord's voice in seconds. Built for two rental properties with no new apps, numbers, or monthly fees.",
+      "tags": [
+        "iOS",
+        "Apple Shortcuts",
+        "Automation",
+        "AI",
+        "Prompt Engineering",
+        "Claude",
+        "ChatGPT"
+      ],
+      "stageLabel": "Draft reply notification",
+      "caseStudy": [
+        {
+          "heading": "The problem",
+          "body": "Landlords get a steady stream of tenant texts: when rent is due, where to send it, what to do about a broken appliance. Most of the answers are already in the lease, but each one still pulls the landlord away from whatever they're doing."
+        },
+        {
+          "heading": "What I built",
+          "body": "An automation that runs on the landlord's own iPhone. When the tenant texts, it sends the message to an AI model along with a prompt built from the signed lease, and returns a draft reply in seconds. No new phone number, no app for the tenant to install, no monthly software fee. I set it up for two rental properties."
+        },
+        {
+          "heading": "How it works",
+          "steps": [
+            "A Shortcuts automation fires when a message arrives from the tenant's number.",
+            "The message is passed into a custom prompt holding the key lease terms: rent, payment method, term and renewal notice, utilities, appliances, house rules, and repair process.",
+            "The AI drafts a short reply in the landlord's voice, in whatever language the tenant writes in.",
+            "The draft appears as a notification for the landlord to review. Once trusted, it can send on its own."
+          ],
+          "flow": {
+            "start": [
+              "Tenant texts landlord",
+              "Shortcuts automation fires",
+              "Message + lease prompt sent to AI"
+            ],
+            "decision": "In scope?",
+            "branches": [
+              { "when": "Lease / unit question", "then": "Draft reply from lease facts" },
+              { "when": "Emergency", "then": "911 first, then call landlord" },
+              { "when": "Off-topic or trick", "then": "Neutral holding reply" },
+              { "when": "Angry / legal", "then": "Calm acknowledgment only" }
+            ],
+            "end": [
+              "Notification for landlord review",
+              "Landlord sends, or auto-send once trusted"
+            ]
+          }
+        },
+        {
+          "heading": "Guardrails",
+          "items": [
+            "Answers only what the lease covers. Anything else gets a neutral holding reply.",
+            "Never agrees to repair dates, entry times, rent changes, or lease changes. Those stay with the landlord.",
+            "Treats the tenant's text as content, not commands, so \"ignore your instructions\" tricks fail.",
+            "Emergencies always get a safety-first reply: call 911, then the landlord.",
+            "Angry or legal messages (lawyers, the Landlord and Tenant Board, withholding rent) get a calm acknowledgment and nothing more.",
+            "Kept away from lease clauses that may not hold up under Ontario's Residential Tenancies Act."
+          ]
+        },
+        {
+          "heading": "What I learned",
+          "items": [
+            "Shortcuts variables have to be inserted as tokens; typed placeholders silently break the flow.",
+            "A separate shortcut needs to be set to accept input before an automation can hand it the message.",
+            "Model choice depends on hardware: Apple's built-in ChatGPT action needs an iPhone 15 Pro or newer, so older phones use the Claude app's Ask Claude action instead.",
+            "Putting a closing instruction after the tenant's message makes the prompt much harder to hijack."
+          ]
+        },
+        {
+          "heading": "Stack",
+          "items": [
+            "Apple Shortcuts (Message automation, Receive input, Show Notification, Send Message)",
+            "Apple Intelligence ChatGPT action (iPhone 15 Pro and newer)",
+            "Claude iOS app \"Ask Claude\" action (older iPhones, iOS 18+)",
+            "Custom system prompt with scope lock and prompt-injection defense"
+          ]
+        }
+      ]
+    }
+  ],
   "testimonial": [
     {
       "id": "1",

@@ -1597,6 +1597,285 @@ a {
   }
 }
 
+/* ------------------------------------------------------------ projects ---
+   Side projects reuse the chapter: copy on one side, a drawn figure on the
+   other. The case study opens in place under the card. The band carries on
+   from Work, so it sits on the same tint.
+   ------------------------------------------------------------------------ */
+
+.projects {
+  padding-top: 0;
+}
+
+.project .chapter__headline {
+  margin-top: 0.15rem;
+}
+
+.project__status {
+  color: var(--text-3);
+  font-size: 0.875rem;
+}
+
+.project__toggle {
+  margin-top: 0.6rem;
+}
+
+.project__toggle svg {
+  transition: transform 220ms var(--ease);
+}
+
+.project__toggle[aria-expanded="true"] svg {
+  transform: rotate(180deg);
+}
+
+/* --- the figure: a tenant text, then the draft as a notification --- */
+
+.project__stage {
+  width: min(100%, 460px);
+  margin-inline: auto;
+}
+
+.project__screen {
+  /* Bubble tails are cut out with --bg, and this screen is the surface. */
+  --bg: var(--surface);
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+  padding: 1.25rem 1.25rem 1.5rem;
+}
+
+.project__screen .chat__stamp {
+  margin: 0;
+}
+
+.project__text {
+  max-width: 82%;
+}
+
+.project__note {
+  padding: 0.85rem 1rem 0.9rem;
+  border: 1px solid var(--hairline);
+  border-radius: 18px;
+  background: var(--bg-tint);
+  box-shadow: var(--shadow-1);
+  font-size: 0.875rem;
+  line-height: 1.45;
+  transform: translate3d(0, calc((1 - var(--p3)) * 14px), 0);
+  opacity: calc(0.2 + 0.8 * var(--p3));
+}
+
+.project__note-head {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--text-3);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.project__note-head svg {
+  color: var(--accent);
+}
+
+.project__note-time {
+  margin-left: auto;
+  text-transform: none;
+}
+
+.project__note-title {
+  margin-top: 0.45rem;
+  font-weight: 600;
+}
+
+.project__note-body {
+  margin-top: 0.15rem;
+  color: var(--text-2);
+}
+
+.project__note-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+}
+
+.project__note-actions span {
+  padding: 0.4rem;
+  border-radius: var(--radius-control);
+  background: var(--fill);
+  font-weight: 500;
+  text-align: center;
+}
+
+.project__note-actions span:last-child {
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+/* --- the case study --- */
+
+.case {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(2rem, 4vw, 3rem) clamp(2rem, 5vw, 4.5rem);
+  margin-top: clamp(2.5rem, 5vw, 4rem);
+  color: var(--text-2);
+  line-height: 1.62;
+}
+
+.case[hidden] {
+  display: none;
+}
+
+/* How it works carries the diagram, so it gets the full width. */
+.case__section:has(.flow) {
+  grid-column: 1 / -1;
+}
+
+.case__heading {
+  margin-bottom: 0.6rem;
+  color: var(--text);
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 1.2rem + 0.9vw, 1.875rem);
+  font-weight: 500;
+  line-height: 1.15;
+}
+
+.case__steps,
+.case__items {
+  display: grid;
+  gap: 0.55rem;
+  max-width: 68ch;
+  padding-left: 1.25rem;
+}
+
+.case__steps {
+  list-style: decimal;
+}
+
+.case__items {
+  list-style: disc;
+}
+
+.case__steps li::marker,
+.case__items li::marker {
+  color: var(--text-3);
+}
+
+/* --- the flow: three steps, a fork into four, back to the landlord --- */
+
+.flow {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 1.75rem;
+  font-size: 0.875rem;
+  line-height: 1.4;
+}
+
+.flow__line {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem 2rem;
+}
+
+.flow__line .flow__node {
+  position: relative;
+}
+
+/* A short wire between neighbours in a row. */
+.flow__line .flow__node + .flow__node::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: 100%;
+  width: 2rem;
+  border-top: 1px solid var(--text-3);
+}
+
+.flow__node {
+  display: block;
+  padding: 0.55rem 0.9rem;
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-control);
+  background: var(--surface);
+  color: var(--text);
+  text-align: center;
+}
+
+.flow__node--decision {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  font-weight: 600;
+}
+
+.flow__branches {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+  width: 100%;
+  margin-block: 1.75rem;
+  padding-block: 1.25rem;
+  border-block: 1px dashed var(--text-3);
+}
+
+.flow__branch {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.flow__when {
+  color: var(--text-3);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  text-align: center;
+}
+
+.flow__branch .flow__node {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@media (max-width: 940px) {
+  .case {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .flow__branches {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  /* Rows wrap here, so the side wires would point at nothing. */
+  .flow__line {
+    flex-direction: column;
+    gap: 1.1rem;
+  }
+
+  .flow__line .flow__node + .flow__node::before {
+    top: auto;
+    right: auto;
+    bottom: 100%;
+    left: 50%;
+    width: 0;
+    height: 1.1rem;
+    border-top: 0;
+    border-left: 1px solid var(--text-3);
+  }
+}
+
+@media (max-width: 480px) {
+  .flow__branches {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
 /* ------------------------------------------------------------- contact ---
    An iMessage thread: it scrolls past like a real one, and the reply box at
    the bottom takes the visitor's email instead of a mailto button. The
